@@ -38,6 +38,7 @@ dosfstools
 e2fsprogs
 ecryptfs-utils
 efibootmgr
+element-desktop
 evince
 evolution-data-server
 exfat-utils
@@ -78,6 +79,7 @@ gnome-keyring
 gnome-layout-switcher
 gnome-maps
 gnome-online-accounts
+gnome-podcasts
 gnome-screenshot
 gnome-session
 gnome-settings-daemon
