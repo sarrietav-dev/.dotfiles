@@ -1,0 +1,114 @@
+{
+    "com.github.nesivmi.ulauncher-translate": {
+        "id": "com.github.nesivmi.ulauncher-translate",
+        "url": "https://github.com/nesivmi/ulauncher-translate",
+        "updated_at": "2020-12-14T18:40:15.852588",
+        "last_commit": "38cf20f4621704b26a1e866d066ccb6a2acac5f2",
+        "last_commit_time": "2020-11-21T21:26:56"
+    },
+    "com.github.wsdfhjxc.ulauncher-qr-code": {
+        "id": "com.github.wsdfhjxc.ulauncher-qr-code",
+        "url": "https://github.com/wsdfhjxc/ulauncher-qr-code",
+        "updated_at": "2021-01-21T11:16:13.003542",
+        "last_commit": "736014df577f31580c0ae1aecbc9596e57c86f12",
+        "last_commit_time": "2021-01-07T21:24:36"
+    },
+    "com.github.mikebarkmin.ulauncher-duckduckgo": {
+        "id": "com.github.mikebarkmin.ulauncher-duckduckgo",
+        "url": "https://github.com/mikebarkmin/ulauncher-duckduckgo",
+        "updated_at": "2021-01-21T11:19:26.391877",
+        "last_commit": "2057c9ea94e949b1018cac7afdadb873cae488f8",
+        "last_commit_time": "2020-12-15T07:23:32"
+    },
+    "com.github.adamtillou.ulauncher-aurman-plugin": {
+        "id": "com.github.adamtillou.ulauncher-aurman-plugin",
+        "url": "https://github.com/AdamTillou/ulauncher-aurman-plugin",
+        "updated_at": "2021-01-21T11:19:35.898636",
+        "last_commit": "f1873c7c5dcad002ca0a3f0e5fb9f5b3b8a88dbe",
+        "last_commit_time": "2020-07-17T03:09:31"
+    },
+    "com.github.ulauncher.ulauncher-emoji": {
+        "id": "com.github.ulauncher.ulauncher-emoji",
+        "url": "https://github.com/Ulauncher/ulauncher-emoji",
+        "updated_at": "2021-01-21T11:19:53.204576",
+        "last_commit": "d56b2c8106ab5fbc87b55f608a3bd75db23f2904",
+        "last_commit_time": "2020-10-03T19:10:03"
+    },
+    "com.github.isacikgoz.ukill": {
+        "id": "com.github.isacikgoz.ukill",
+        "url": "https://github.com/isacikgoz/ukill",
+        "updated_at": "2021-01-21T11:19:57.717990",
+        "last_commit": "bc50d9f41d46b6813a5aeebddd15734dcdb9d8db",
+        "last_commit_time": "2019-05-28T18:30:00"
+    },
+    "com.github.dalanicolai.gnome-tracker-extension": {
+        "id": "com.github.dalanicolai.gnome-tracker-extension",
+        "url": "https://github.com/dalanicolai/gnome-tracker-extension",
+        "updated_at": "2021-01-21T11:20:09.135671",
+        "last_commit": "a45f42a50d12a617c2b58067d5d4b97ed6155192",
+        "last_commit_time": "2020-08-31T10:06:27"
+    },
+    "com.github.friday.ulauncher-clipboard": {
+        "id": "com.github.friday.ulauncher-clipboard",
+        "url": "https://github.com/friday/ulauncher-clipboard",
+        "updated_at": "2021-01-21T11:20:20.235881",
+        "last_commit": "400723532a0fbb413befbf19f6c45debfe38ad84",
+        "last_commit_time": "2020-01-11T20:30:17"
+    },
+    "com.github.brpaz.ulauncher-github": {
+        "id": "com.github.brpaz.ulauncher-github",
+        "url": "https://github.com/brpaz/ulauncher-github",
+        "updated_at": "2021-01-21T11:20:32.550188",
+        "last_commit": "93e3b043f60c0a07275933aa9a9c653f015a8d47",
+        "last_commit_time": "2020-12-12T15:59:01"
+    },
+    "com.github.brpaz.ulauncher-vscode-projects": {
+        "id": "com.github.brpaz.ulauncher-vscode-projects",
+        "url": "https://github.com/brpaz/ulauncher-vscode-projects",
+        "updated_at": "2021-01-21T11:20:41.067654",
+        "last_commit": "f1002ab82c1bf27587b83e29c8d0976f61e33fee",
+        "last_commit_time": "2020-12-25T09:37:56"
+    },
+    "com.github.iboyperson.ulauncher-system": {
+        "id": "com.github.iboyperson.ulauncher-system",
+        "url": "https://github.com/iboyperson/ulauncher-system",
+        "updated_at": "2021-01-21T11:20:49.268898",
+        "last_commit": "9268d22afd93748821164e12f806b049533fc873",
+        "last_commit_time": "2020-12-08T21:03:45"
+    },
+    "com.github.dhelmr.ulauncher-duckduckgo-bangs": {
+        "id": "com.github.dhelmr.ulauncher-duckduckgo-bangs",
+        "url": "https://github.com/dhelmr/ulauncher-duckduckgo-bangs",
+        "updated_at": "2021-01-21T11:21:58.136026",
+        "last_commit": "efb7b3e6545dedb4d626a085c0480eddc3dd4ed2",
+        "last_commit_time": "2020-02-15T22:17:26"
+    },
+    "com.github.brpaz.ulauncher-currency": {
+        "id": "com.github.brpaz.ulauncher-currency",
+        "url": "https://github.com/brpaz/ulauncher-currency",
+        "updated_at": "2021-01-21T11:22:33.066123",
+        "last_commit": "1a023875599d333f551e89cc4ec8670ca0460275",
+        "last_commit_time": "2020-11-14T16:55:33"
+    },
+    "com.github.ygun.ulauncher-nm": {
+        "id": "com.github.ygun.ulauncher-nm",
+        "url": "https://github.com/ygun/ulauncher-nm",
+        "updated_at": "2021-02-09T09:55:24.566746",
+        "last_commit": "036a0b3b24fb325f7aa648872c916d04966e7101",
+        "last_commit_time": "2021-02-03T13:17:59"
+    },
+    "com.github.fsevenm.ulauncher-verb-forms-checker": {
+        "id": "com.github.fsevenm.ulauncher-verb-forms-checker",
+        "url": "https://github.com/fsevenm/ulauncher-verb-forms-checker",
+        "updated_at": "2021-02-09T10:00:47.652020",
+        "last_commit": "336f894a306aef80c5873a56b5b9331bbc401712",
+        "last_commit_time": "2021-01-15T19:07:59"
+    },
+    "com.github.melianmiko.ulauncher-bluetoothd": {
+        "id": "com.github.melianmiko.ulauncher-bluetoothd",
+        "url": "https://github.com/melianmiko/ulauncher-bluetoothd",
+        "updated_at": "2021-02-09T10:01:17.222969",
+        "last_commit": "2e55095c0c2bc7e57143811ed45b5e0731648acf",
+        "last_commit_time": "2021-01-29T11:43:45"
+    }
+}

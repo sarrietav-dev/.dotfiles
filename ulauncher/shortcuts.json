@@ -1,0 +1,42 @@
+{
+    "e7c12cb1-76fc-482c-a706-3041de66c639": {
+        "id": "e7c12cb1-76fc-482c-a706-3041de66c639",
+        "name": "Google Search",
+        "keyword": "g",
+        "cmd": "https://google.com/search?q=%s",
+        "icon": "/usr/share/ulauncher/media/google-search-icon.png",
+        "is_default_search": true,
+        "run_without_argument": false,
+        "added": 1601788350.8722155
+    },
+    "8edfe2c8-7425-4432-8648-33a094c243da": {
+        "id": "8edfe2c8-7425-4432-8648-33a094c243da",
+        "name": "Stack Overflow",
+        "keyword": "so",
+        "cmd": "http://stackoverflow.com/search?q=%s",
+        "icon": "/usr/share/ulauncher/media/stackoverflow-icon.svg",
+        "is_default_search": true,
+        "run_without_argument": false,
+        "added": 1601788350.872318
+    },
+    "994a4d7f-6bee-46cd-a06c-45f79e4efa50": {
+        "id": "994a4d7f-6bee-46cd-a06c-45f79e4efa50",
+        "name": "Wikipedia",
+        "keyword": "wiki",
+        "cmd": "https://en.wikipedia.org/wiki/%s",
+        "icon": "/usr/share/ulauncher/media/wikipedia-icon.png",
+        "is_default_search": true,
+        "run_without_argument": false,
+        "added": 1601788350.8723912
+    },
+    "1b5c48b8-3c09-47c2-bd2f-4a34a1c9455b": {
+        "id": "1b5c48b8-3c09-47c2-bd2f-4a34a1c9455b",
+        "name": "Sin\u00f3nimos (WordReference)",
+        "keyword": "sin",
+        "cmd": "https://www.wordreference.com/sinonimos/%s ",
+        "icon": "~/Pictures/wordreference.png",
+        "is_default_search": false,
+        "run_without_argument": false,
+        "added": 1601788706.613119
+    }
+}
