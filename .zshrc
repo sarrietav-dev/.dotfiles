@@ -14,6 +14,7 @@ export EDITOR=/usr/bin/nvim
 path+=("/home/sebastian/.flutter/flutter/bin")
 set -o vi
 alias pacman-update='sudo pacman-mirrors --geoip'
+alias open="xdg-open"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -81,7 +82,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-syntax-highlighting zsh-autosuggestions zsh-completions command-not-found fzf thefuck)
+plugins=(git zsh-syntax-highlighting zsh-autosuggestions zsh-completions command-not-found fzf thefuck autojump jump vscode web-search npm)
 
 export FZF_BASE=/usr/bin/fzf/install/dir
 
