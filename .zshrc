@@ -12,9 +12,11 @@ fi
 export ZSH="/home/sebastian/.oh-my-zsh"
 export EDITOR=/usr/bin/nvim
 path+=("/home/sebastian/.flutter/flutter/bin")
+path+=("/home/sebastian/bin")
 set -o vi
 alias pacman-update='sudo pacman-mirrors --geoip'
 alias open="xdg-open"
+alias todo="todo.sh -d /home/sebastian/.todo/todo.txt-cli/todo.cfg"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
