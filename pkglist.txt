@@ -3,6 +3,7 @@ acpid
 adwaita-icon-theme
 adwaita-maia
 alacarte
+alacritty
 alsa-firmware
 alsa-utils
 apparmor
@@ -43,6 +44,7 @@ evince
 evolution-data-server
 exfat-utils
 f2fs-tools
+feh
 ffmpegthumbnailer
 file
 file-roller
@@ -295,6 +297,7 @@ valgrind
 vi
 vim
 vino
+vlc
 vulkan-intel
 vulkan-radeon
 wallpapers-2018
@@ -326,3 +329,5 @@ xz
 yay
 yelp
 youtube-dl
+zathura
+zathura-pdf-mupdf
