@@ -65,16 +65,16 @@
     "com.github.brpaz.ulauncher-vscode-projects": {
         "id": "com.github.brpaz.ulauncher-vscode-projects",
         "url": "https://github.com/brpaz/ulauncher-vscode-projects",
-        "updated_at": "2021-01-21T11:20:41.067654",
-        "last_commit": "f1002ab82c1bf27587b83e29c8d0976f61e33fee",
-        "last_commit_time": "2020-12-25T09:37:56"
+        "updated_at": "2021-05-26T00:59:22.832775",
+        "last_commit": "0e3c1b84a124f959d25b58f85e3ab31ee6aac72e",
+        "last_commit_time": "2021-02-03T19:57:59"
     },
     "com.github.iboyperson.ulauncher-system": {
         "id": "com.github.iboyperson.ulauncher-system",
         "url": "https://github.com/iboyperson/ulauncher-system",
-        "updated_at": "2021-01-21T11:20:49.268898",
-        "last_commit": "9268d22afd93748821164e12f806b049533fc873",
-        "last_commit_time": "2020-12-08T21:03:45"
+        "updated_at": "2021-05-26T00:59:38.270139",
+        "last_commit": "0d2999aec50de7c9488f20ed893869c328de42c0",
+        "last_commit_time": "2021-04-15T13:40:47"
     },
     "com.github.dhelmr.ulauncher-duckduckgo-bangs": {
         "id": "com.github.dhelmr.ulauncher-duckduckgo-bangs",
