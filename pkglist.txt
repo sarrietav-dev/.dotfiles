@@ -12,11 +12,13 @@ avahi
 b43-fwcutter
 baobab
 bash
+bat
+bluez-utils
 bmenu
+brave
 btrfs-progs
 bzip2
 caffeine-ng
-chromium
 clang
 coreutils
 cowsay
@@ -31,6 +33,7 @@ dhclient
 dhcpcd
 diffutils
 discord
+dmenu
 dmidecode
 dmraid
 dnsmasq
@@ -44,6 +47,7 @@ evince
 evolution-data-server
 exfat-utils
 f2fs-tools
+fd
 feh
 ffmpegthumbnailer
 file
@@ -76,7 +80,6 @@ gnome-control-center
 gnome-desktop
 gnome-disk-utility
 gnome-font-viewer
-gnome-getting-started-docs
 gnome-keyring
 gnome-layout-switcher
 gnome-maps
@@ -99,6 +102,7 @@ gnome-user-docs
 gnome-user-share
 gnome-wallpapers
 gnome-weather
+go-tools
 gparted
 grep
 grilo-plugins
@@ -119,6 +123,7 @@ gvfs-google
 gvfs-mtp
 gvfs-smb
 gzip
+htop
 ibus
 illyria-wallpaper
 inetutils
@@ -237,10 +242,13 @@ pamac-flatpak-plugin
 pamac-gnome-integration
 pamac-gtk
 pamac-snap-plugin
+pandoc
 papirus-maia-icon-theme
+pass
 pciutils
 peek
 perl
+playonlinux
 polari
 polkit-gnome
 postgresql
@@ -250,8 +258,11 @@ psmisc
 pulseaudio-bluetooth
 pulseaudio-ctl
 pulseaudio-zeroconf
+pycharm-community-edition
 qgnomeplatform
 reiserfsprogs
+ripgrep
+rpi-imager
 rsync
 rygel
 s-nail
@@ -263,6 +274,7 @@ simple-scan
 snapd-glib
 spectre-meltdown-checker
 sqlitebrowser
+stacer
 steam-manjaro
 sudo
 sushi
@@ -279,6 +291,7 @@ tlp
 totem
 tracker
 tracker-miners
+translate-shell
 transmission-gtk
 tree
 ttf-dejavu
