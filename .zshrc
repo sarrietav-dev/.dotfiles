@@ -11,6 +11,7 @@ fi
 # Path to your oh-my-zsh installation.
 export ZSH="/home/sebastian/.oh-my-zsh"
 export EDITOR=/usr/bin/nvim
+export CHROME_EXECUTABLE=/usr/bin/brave
 path+=("/home/sebastian/.flutter/flutter/bin")
 path+=("/home/sebastian/bin")
 set -o vi
@@ -130,3 +131,4 @@ alias llg='logo-ls -alD'
 
 eval $(thefuck --alias)
 export PATH
+source /usr/share/nvm/init-nvm.sh
