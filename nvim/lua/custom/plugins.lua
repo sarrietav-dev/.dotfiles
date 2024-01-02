@@ -14,6 +14,16 @@ local plugins = {
           require "custom.configs.null-ls"
         end,
       },
+      {
+        "windwp/nvim-autopairs",
+        opts = {
+          fast_wrap = {},
+          disable_filetype = { "TelescopePrompt", "vim" },
+        },
+        config = function(_, opts)
+          require("nvim-autopairs").setup(opts)
+        end,
+      },
     },
     config = function()
       require "plugins.configs.lspconfig"
