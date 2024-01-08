@@ -14,23 +14,12 @@ local sources = {
 
   -- cpp
   b.formatting.clang_format,
-}
 
-local on_attarch = function(client, bufnr)
-  if client.supports_method "textDocument/formatting" then
-    vim.api.nvim_clear_autocmds {
-      group = augroup,
-      buffer = bufnr,
-    }
-    vim.api.nvim_clear_autocmd("BufWritePre", {
-      group = augroup,
-      buffer = bufnr,
-      callback = function()
-        vim.lsp.buf.format { bufnr = bufnr }
-      end,
-    })
-  end
-end
+  -- go stuff
+  b.formatting.gofumpt,
+  b.formatting.goimports_reviser,
+  b.formatting.golines,
+}
 
 null_ls.setup {
   debug = true,
