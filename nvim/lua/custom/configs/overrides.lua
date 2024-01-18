@@ -5,13 +5,19 @@ M.treesitter = {
     "lua",
     "html",
     "css",
+    "scss",
     "javascript",
     "typescript",
     "tsx",
     "go",
+    "gomod",
     "rust",
     "markdown",
     "markdown_inline",
+    "graphql",
+    "svelte",
+    "dockerfile",
+    "astro"
   },
   indent = {
     enable = true,
@@ -40,6 +46,7 @@ M.mason = {
 
     -- rust stuff
     "rust-analyzer",
+    "graphql-language-service-cli"
   },
 }
 
