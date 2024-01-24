@@ -79,7 +79,11 @@ local plugins = {
     init = function ()
       vim.g.rustfmt_autosave = 1
     end
-  }
+  },
+  {
+    "NvChad/nvim-colorizer.lua",
+    opts = overrides.colorizer,
+  },
 
   -- To make a plugin not be loaded
   -- {

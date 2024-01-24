@@ -82,4 +82,10 @@ M.copilot = {
   }
 }
 
+M.colorizer = {
+  user_default_options = {
+    tailwind = true,
+  }
+}
+
 return M
