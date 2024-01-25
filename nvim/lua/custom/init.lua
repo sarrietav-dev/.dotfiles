@@ -8,6 +8,5 @@
 
 local wo = vim.wo
 
-
 wo.number = true
 wo.relativenumber = true
