@@ -84,6 +84,13 @@ local plugins = {
     "NvChad/nvim-colorizer.lua",
     opts = overrides.colorizer,
   },
+  {
+    "machakann/vim-highlightedyank",
+    event = "BufRead",
+    config = function()
+      vim.g.highlightedyank_highlight_duration = 300
+    end,
+  }
 
   -- To make a plugin not be loaded
   -- {
