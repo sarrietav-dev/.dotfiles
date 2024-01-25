@@ -4,8 +4,8 @@ local M = {}
 M.general = {
   n = {
     [";"] = { ":", "enter command mode", opts = { nowait = true } },
-    ["<leader>gce"] = { ":", "Copilot enable" },
-    ["<leader>gcd"] = { ":", "Copilot disable" },
+    ["<leader>gce"] = { ":Copilot enable <CR>", "Enable copilot" },
+    ["<leader>gcd"] = { ":Copilot disable <CR>", "Disable copilot" },
   },
   v = {
     [">"] = { ">gv", "indent" },
