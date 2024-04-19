@@ -252,4 +252,10 @@ return {
       vim.g.rustaceanvim = vim.tbl_deep_extend("keep", vim.g.rustaceanvim or {}, opts or {})
     end,
   },
+  {
+    "hedyhli/outline.nvim",
+    keys = { { "<leader>cs", "<cmd>Outline<cr>", desc = "Toggle Outline" } },
+    cmd = "Outline",
+    opts = require "configs.outline",
+  },
 }

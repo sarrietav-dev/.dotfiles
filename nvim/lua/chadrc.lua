@@ -13,6 +13,7 @@ M.ui = {
     Comment = { italic = true },
     ["@comment"] = { italic = true },
   },
+  statusline = { theme = "default" },
 }
 
 return M
