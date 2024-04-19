@@ -28,6 +28,13 @@ return {
         "gopls",
         "typescript-language-server",
         "tailwindcss-language-server",
+        "goimports",
+        "gofumpt",
+        "gomodifytags",
+        "impl",
+        "delve",
+        "codelldb",
+        "js-debug-adapter",
       },
     },
   },
@@ -42,10 +49,15 @@ return {
         "html",
         "css",
         "go",
+        "gomod",
+        "gowork",
+        "gosum",
         "typescript",
         "javascript",
         "tsx",
         "rust",
+        "ron",
+        "toml",
       },
       autotag = {
         enable = true,
@@ -133,6 +145,10 @@ return {
           },
         },
       },
+      {
+        "leoluz/nvim-dap-go",
+        config = true,
+      },
 
       -- mason.nvim integration
       {
@@ -180,6 +196,7 @@ return {
       { "<leader>dr", function() require("dap").repl.toggle() end, desc = "Toggle REPL" },
       { "<leader>ds", function() require("dap").session() end, desc = "Session" },
       { "<leader>dt", function() require("dap").terminate() end, desc = "Terminate" },
+      { "<leader>td", function() require("neotest").run.run({strategy = "dap"}) end, desc = "Debug Nearest" },
       { "<leader>dw", function() require("dap.ui.widgets").hover() end, desc = "Widgets" },
     },
 
@@ -207,6 +224,32 @@ return {
     config = function(_, opts)
       local copilot_cmp = require "copilot_cmp"
       copilot_cmp.setup(opts)
+    end,
+  },
+  {
+    "nvim-neotest/neotest",
+    optional = true,
+    dependencies = {
+      "nvim-neotest/neotest-go",
+    },
+    opts = require "configs.neotest",
+  },
+  {
+    "Saecki/crates.nvim",
+    event = { "BufRead Cargo.toml" },
+    opts = {
+      src = {
+        cmp = { enabled = true },
+      },
+    },
+  },
+  {
+    "mrcjkb/rustaceanvim",
+    version = "^4", -- Recommended
+    ft = { "rust" },
+    opts = require "configs.rustaceanvim",
+    config = function(_, opts)
+      vim.g.rustaceanvim = vim.tbl_deep_extend("keep", vim.g.rustaceanvim or {}, opts or {})
     end,
   },
 }
