@@ -56,24 +56,23 @@ return {
     "hrsh7th/nvim-cmp",
     dependencies = {
       { "roobert/tailwindcss-colorizer-cmp.nvim", config = true },
+      {
+        "zbirenbaum/copilot-cmp",
+        dependencies = "copilot.lua",
+        opts = {},
+        config = function(_, opts)
+          local copilot_cmp = require "copilot_cmp"
+          copilot_cmp.setup(opts)
+        end,
+      },
     },
     opts = require "configs.cmp",
   },
   { "roobert/tailwindcss-colorizer-cmp.nvim", config = true },
   {
     "windwp/nvim-ts-autotag",
-    event = "InsertEnter",
-    config = function()
-      vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
-        underline = true,
-        virtual_text = {
-          spacing = 5,
-          severity_limit = "Warning",
-        },
-        update_in_insert = true,
-      })
-      require("nvim-ts-autotag").setup()
-    end,
+    event = { "BufReadPost", "BufWritePost", "BufNewFile" },
+    opts = {},
   },
   {
     "kylechui/nvim-surround",
@@ -87,21 +86,29 @@ return {
   },
   {
     "mfussenegger/nvim-dap",
-    config = function()
-      require("nvim-dap").setup()
-    end,
   },
   {
     "jay-babu/mason-nvim-dap.nvim",
-    dependencies = {
-      { "mfussenegger/nvim-dap" },
-      { "williamboman/mason.nvim" },
-    },
   },
   {
     "rcarriga/nvim-dap-ui",
-    dependencies = {
-      { "mfussenegger/nvim-dap" },
-    },
+    dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" },
   },
+  {
+    "zbirenbaum/copilot.lua",
+    cmd = "Copilot",
+    event = "InsertEnter",
+    build = ":Copilot auth",
+    opts = require "configs.copilot",
+  },
+  {
+    "zbirenbaum/copilot-cmp",
+    dependencies = "copilot.lua",
+    opts = {},
+    config = function(_, opts)
+      local copilot_cmp = require "copilot_cmp"
+      copilot_cmp.setup(opts)
+    end,
+  },
+  {},
 }

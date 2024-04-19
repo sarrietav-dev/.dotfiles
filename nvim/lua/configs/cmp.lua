@@ -1,3 +1,4 @@
+local cmp = require "cmp"
 local cmp_ui = require("nvconfig").ui.cmp
 local cmp_style = cmp_ui.style
 
@@ -27,9 +28,36 @@ local formatting_style = {
   end,
 }
 
+local has_words_before = function()
+  if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then
+    return false
+  end
+  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+  return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match "^%s*$" == nil
+end
+
+local tab = function(fallback)
+  if cmp.visible() and has_words_before() then
+    cmp.select_next_item()
+  elseif require("luasnip").expand_or_jumpable() then
+    vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-expand-or-jump", true, true, true), "")
+  else
+    fallback()
+  end
+end
+
 local opts = function()
   local nvchad_ops = require "nvchad.configs.cmp"
   nvchad_ops.formatting = formatting_style
+  table.insert(nvchad_ops.sources, 1, {
+    name = "copilot",
+    group_index = 1,
+    priority = 100,
+  })
+
+  nvchad_ops.mapping["<Tab>"] = cmp.mapping(tab, { "i", "s" })
+
+  return nvchad_ops
 end
 
 return opts
