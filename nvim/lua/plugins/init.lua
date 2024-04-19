@@ -58,9 +58,6 @@ return {
       { "roobert/tailwindcss-colorizer-cmp.nvim", config = true },
     },
     opts = require "configs.cmp",
-    config = function(_, opts)
-      require("cmp").setup(opts)
-    end,
   },
   { "roobert/tailwindcss-colorizer-cmp.nvim", config = true },
   {
@@ -75,6 +72,7 @@ return {
         },
         update_in_insert = true,
       })
+      require("nvim-ts-autotag").setup()
     end,
   },
   {
@@ -86,5 +84,14 @@ return {
         -- Configuration here, or leave empty to use defaults
       }
     end,
+  },
+  {
+    "mfussenegger/nvim-dap",
+    config = function()
+      require("nvim-dap").setup()
+    end,
+  },
+  {
+    "jay-babu/mason-nvim-dap.nvim",
   },
 }
