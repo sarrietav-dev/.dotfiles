@@ -113,7 +113,7 @@ return {
         opts = {},
         config = function(_, opts)
           -- setup dap config by VsCode launch.json file
-          -- require("dap.ext.vscode").load_launchjs()
+          require("dap.ext.vscode").load_launchjs()
           local dap = require "dap"
           local dapui = require "dapui"
           dapui.setup(opts)
@@ -158,11 +158,32 @@ return {
         opts = {
           -- Makes a best effort to setup the various debuggers with
           -- reasonable debug configurations
-          automatic_installation = true,
+          automatic_installation = false,
 
           -- You can provide additional configuration to the handlers,
           -- see mason-nvim-dap README for more information
-          handlers = {},
+          handlers = {
+            function(config)
+              -- all sources with no handler get passed here
+
+              -- Keep original functionality
+              require("mason-nvim-dap").default_setup(config)
+            end,
+            firefox = function(config)
+              config.configurations = {
+                {
+                  type = "firefox", -- the type here established the link to the adapter definition: `dap.adapters.python`
+                  request = "launch",
+                  name = "Firefox: Debug vite",
+                  webRoot = "${workspaceFolder}/client",
+                  url = "http://localhost:5173",
+                  profile = "dev-edition-default",
+                  program = "${file}", -- This configuration will launch the current file if used.
+                },
+              }
+              require("mason-nvim-dap").default_setup(config) -- don't forget this!
+            end,
+          },
 
           -- You'll need to check that you have the required things installed
           -- online, please don't ask me how to install them :)
@@ -178,32 +199,148 @@ return {
       },
     },
 
-    -- stylua: ignore
     keys = {
-      { "<leader>dB", function() require("dap").set_breakpoint(vim.fn.input('Breakpoint condition: ')) end, desc = "Breakpoint Condition" },
-      { "<leader>dP",  function() require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end, desc = "Log point" },
-      { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "Toggle Breakpoint" },
-      { "<F5>", function() require("dap").continue() end, desc = "Continue" },
-      { "<F10>", function() require("dap").step_over() end, desc = "Step Over" },
-      { "<F11>", function() require("dap").step_into() end, desc = "Step Into" },
-      { "<F12>", function() require("dap").step_out() end, desc = "Step Out" },
-      { "<leader>da", function() require("dap").continue({ before = get_args }) end, desc = "Run with Args" },
-      { "<leader>dC", function() require("dap").run_to_cursor() end, desc = "Run to Cursor" },
-      { "<leader>dg", function() require("dap").goto_() end, desc = "Go to Line (No Execute)" },
-      { "<leader>dj", function() require("dap").down() end, desc = "Down" },
-      { "<leader>dk", function() require("dap").up() end, desc = "Up" },
-      { "<leader>dl", function() require("dap").run_last() end, desc = "Run Last" },
-      { "<leader>dP", function() require("dap").pause() end, desc = "Pause" },
-      { "<leader>dr", function() require("dap").repl.toggle() end, desc = "Toggle REPL" },
-      { "<leader>ds", function() require("dap").session() end, desc = "Session" },
-      { "<leader>dt", function() require("dap").terminate() end, desc = "Terminate" },
-      { "<leader>td", function() require("neotest").run.run({strategy = "dap"}) end, desc = "Debug Nearest" },
-      { "<leader>dw", function() require("dap.ui.widgets").hover() end, desc = "Widgets" },
+      {
+        "<leader>dB",
+        function()
+          require("dap").set_breakpoint(vim.fn.input "Breakpoint condition: ")
+        end,
+        desc = "Breakpoint Condition",
+      },
+      {
+        "<leader>dp",
+        function()
+          require("dap").set_breakpoint(nil, nil, vim.fn.input "Log point message: ")
+        end,
+        desc = "Log point",
+      },
+      {
+        "<leader>db",
+        function()
+          require("dap").toggle_breakpoint()
+        end,
+        desc = "Toggle Breakpoint",
+      },
+      {
+        "<F5>",
+        function()
+          if vim.fn.filereadable ".vscode/launch.json" then
+            require("dap.ext.vscode").load_launchjs(nil, {})
+          end
+          require("dap").continue()
+        end,
+        desc = "Continue",
+      },
+      {
+        "<F10>",
+        function()
+          require("dap").step_over()
+        end,
+        desc = "Step Over",
+      },
+      {
+        "<F11>",
+        function()
+          require("dap").step_into()
+        end,
+        desc = "Step Into",
+      },
+      {
+        "<F12>",
+        function()
+          require("dap").step_out()
+        end,
+        desc = "Step Out",
+      },
+      {
+        "<leader>da",
+        function()
+          require("dap").continue { before = get_args() }
+        end,
+        desc = "Run with Args",
+      },
+      {
+        "<leader>dC",
+        function()
+          require("dap").run_to_cursor()
+        end,
+        desc = "Run to Cursor",
+      },
+      {
+        "<leader>dg",
+        function()
+          require("dap").goto_()
+        end,
+        desc = "Go to Line (No Execute)",
+      },
+      {
+        "<leader>dj",
+        function()
+          require("dap").down()
+        end,
+        desc = "Down",
+      },
+      {
+        "<leader>dk",
+        function()
+          require("dap").up()
+        end,
+        desc = "Up",
+      },
+      {
+        "<leader>dl",
+        function()
+          require("dap").run_last()
+        end,
+        desc = "Run Last",
+      },
+      {
+        "<leader>dP",
+        function()
+          require("dap").pause()
+        end,
+        desc = "Pause",
+      },
+      {
+        "<leader>dr",
+        function()
+          require("dap").repl.toggle()
+        end,
+        desc = "Toggle REPL",
+      },
+      {
+        "<leader>ds",
+        function()
+          require("dap").session()
+        end,
+        desc = "Session",
+      },
+      {
+        "<leader>dt",
+        function()
+          require("dap").terminate()
+        end,
+        desc = "Terminate",
+      },
+      {
+        "<leader>td",
+        function()
+          require("neotest").run.run { strategy = "dap" }
+        end,
+        desc = "Debug Nearest",
+      },
+      {
+        "<leader>dw",
+        function()
+          require("dap.ui.widgets").hover()
+        end,
+        desc = "Widgets",
+      },
     },
 
     config = function()
       local set_sign = vim.fn.sign_define
-      require("dap.ext.vscode").load_launchjs(nil, {})
+
       set_sign("DapBreakpoint", { linehl = "", text = "", texthl = "diffRemoved", numhl = "" })
       set_sign("DapBreakpointCondition", { linehl = "", text = "", texthl = "diffRemoved", numhl = "" })
       set_sign("DapLogPoint", { linehl = "", text = "", texthl = "diffRemoved", numhl = "" })
