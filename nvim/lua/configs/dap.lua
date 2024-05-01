@@ -36,7 +36,7 @@ return {
             request = "launch",
             name = "Firefox: Debug storybook",
             webRoot = "${workspaceFolder}",
-            url = "http://localhost:5173",
+            url = "http://localhost:6006",
             profile = "dev-edition-default",
           },
         }
