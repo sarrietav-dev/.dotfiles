@@ -1,0 +1,7 @@
+[window]
+opacity = 0.8
+blur = true
+
+[font]
+normal = { family = "UbuntuMono Nerd Font", style = "Mono"}
+size = 14
