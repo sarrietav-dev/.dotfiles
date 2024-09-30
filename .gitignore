@@ -4,4 +4,6 @@
 !/nvim/**/*
 !/alacritty/
 !/alacritty/**/*
+!.bashrc
+!.bash_aliases
 
