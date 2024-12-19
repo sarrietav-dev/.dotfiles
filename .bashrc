@@ -119,29 +119,40 @@ if ! shopt -oq posix; then
   fi
 fi
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
+# fnm
+FNM_PATH="/home/sebas/.local/share/fnm"
+if [ -d "$FNM_PATH" ]; then
+  export PATH="$FNM_PATH:$PATH"
+  eval "$(fnm env)"
+fi
 . "$HOME/.cargo/env"
 
+# Set GOPATH
 export GOPATH="$HOME/go"
-export PATH="$GOPATH/bin:$PATH"
-export FLYCTL_INSTALL="/home/sebas/.fly"
-export PATH="$FLYCTL_INSTALL/bin:$PATH"
+PATH="$GOPATH/bin:$PATH"
+
+# Set Flyctl installation path
+export FLYCTL_INSTALL="$HOME/.fly"
+PATH="$FLYCTL_INSTALL/bin:$PATH"
+
+# Set Android SDK paths
+export ANDROID_HOME="$HOME/Android/Sdk"
+PATH="$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools"
+
+# Add Yarn global binaries to PATH
+PATH="$PATH:$(yarn global bin)"
+
+# Add Herd Lite and .NET tools to PATH
+PATH="$PATH:$HOME/.config/herd-lite/bin:$HOME/.dotnet/tools"
+
+# Set PHP INI Scan directory for Herd Lite
+export PHP_INI_SCAN_DIR="$HOME/.config/herd-lite/bin:$PHP_INI_SCAN_DIR"
 
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
-export ANDROID_HOME=$HOME/Android/Sdk
-export PATH="$PATH:$ANDROID_HOME/emulator"
-export PATH="$PATH:$ANDROID_HOME/platform-tools"
 . "/home/sebas/.deno/env"
-
 eval $(starship init bash)
-export PATH="/home/sebas/.config/herd-lite/bin:$PATH"
-export PATH="/home/sebas/.dotnet/tools:$PATH"
-export PHP_INI_SCAN_DIR="/home/sebas/.config/herd-lite/bin:$PHP_INI_SCAN_DIR"
-eval "$(/home/sebas/.config/herd-lite/bin/laravel completion bash)"
-source $HOME/.completion.sh
-
+# eval "$(/home/sebas/.config/herd-lite/bin/laravel completion bash)"
+# source $HOME/.completion.sh
 # Load Angular CLI autocompletion.
 source <(ng completion script)
+export PATH
