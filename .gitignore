@@ -8,4 +8,7 @@
 !/lazygit/**/*
 !.bashrc
 !.bash_aliases
-
+!/ghostty/
+!/ghostty/**/*
+!/bat/
+!/bat/**/*
