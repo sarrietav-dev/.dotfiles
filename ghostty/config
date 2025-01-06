@@ -3,7 +3,7 @@ font-thicken = true
 font-family = CaskaydiaCove NF
 cursor-style = block
 
-background-opacity = 0.99
+background-opacity = 0.85
 fullscreen = false
 
 confirm-close-surface = false
@@ -11,3 +11,6 @@ clipboard-paste-protection = false
 unfocused-split-opacity = 2.0
 
 theme = catppuccin-macchiato
+
+clipboard-read = allow
+clipboard-write = allow
