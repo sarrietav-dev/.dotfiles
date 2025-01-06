@@ -158,3 +158,5 @@ source <(ng completion script)
 export PATH
 
 BAT_THEME="Catppuccin Macchiato"
+
+eval "$(zoxide init bash --cmd cd)"
