@@ -157,6 +157,9 @@ eval $(starship init bash)
 source <(ng completion script)
 export PATH
 
-BAT_THEME="Catppuccin Macchiato"
+export BAT_THEME="Catppuccin Macchiato"
 
-eval "$(zoxide init bash --cmd cd)"
+eval "$(zoxide init bash)"
+
+# Added by `rbenv init` on Tue Jan 21 11:01:46 AM -05 2025
+eval "$(~/.rbenv/bin/rbenv init - --no-rehash bash)"
