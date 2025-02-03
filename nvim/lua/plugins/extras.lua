@@ -64,5 +64,6 @@ return {
     "typescript",
     "vue",
     "yaml",
+    "ruby",
   })),
 }

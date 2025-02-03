@@ -163,3 +163,4 @@ eval "$(zoxide init bash)"
 
 # Added by `rbenv init` on Tue Jan 21 11:01:46 AM -05 2025
 eval "$(~/.rbenv/bin/rbenv init - --no-rehash bash)"
+source <(kubectl completion bash)
