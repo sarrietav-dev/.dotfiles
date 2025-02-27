@@ -119,12 +119,13 @@ if ! shopt -oq posix; then
   fi
 fi
 
-# fnm
-FNM_PATH="/home/sebas/.local/share/fnm"
-if [ -d "$FNM_PATH" ]; then
-  export PATH="$FNM_PATH:$PATH"
-  eval "$(fnm env)"
-fi
+# # fnm
+# FNM_PATH="/home/sebas/.local/share/fnm"
+# if [ -d "$FNM_PATH" ]; then
+#   export PATH="$FNM_PATH:$PATH"
+#   eval "$(fnm env)"
+# fi
+# eval "$(fnm env --use-on-cd --shell bash)"
 . "$HOME/.cargo/env"
 
 # Set GOPATH
@@ -134,6 +135,10 @@ PATH="$GOPATH/bin:$PATH"
 # Set Flyctl installation path
 export FLYCTL_INSTALL="$HOME/.fly"
 PATH="$FLYCTL_INSTALL/bin:$PATH"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
 
 # Set Android SDK paths
 export ANDROID_HOME="$HOME/Android/Sdk"
@@ -164,3 +169,10 @@ eval "$(zoxide init bash)"
 # Added by `rbenv init` on Tue Jan 21 11:01:46 AM -05 2025
 eval "$(~/.rbenv/bin/rbenv init - --no-rehash bash)"
 source <(kubectl completion bash)
+export PATH="$PATH:$HOME/.config/composer/vendor/bin"
+export SWORD_PATH=~/.sword
+export EDITOR=nvim
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"

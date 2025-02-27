@@ -6,9 +6,17 @@
 !/alacritty/**/*
 !/lazygit/
 !/lazygit/**/*
+!/lazydocker/
+!/lazydocker/**/*
 !.bashrc
 !.bash_aliases
 !/ghostty/
 !/ghostty/**/*
 !/bat/
 !/bat/**/*
+!/superfile/
+!/superfile/**/*
+!/tmux/
+!/tmux/**/*
+!/starship/
+!/starship/**/*
