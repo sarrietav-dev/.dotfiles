@@ -4,3 +4,4 @@
 --
 vim.g.lazyvim_php_lsp = "intelephense"
 vim.g.ai_cmp = false
+vim.g.lazyvim_ruby_formatter = "standardrb"
