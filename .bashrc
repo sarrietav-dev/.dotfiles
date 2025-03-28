@@ -126,7 +126,6 @@ fi
 #   eval "$(fnm env)"
 # fi
 # eval "$(fnm env --use-on-cd --shell bash)"
-. "$HOME/.cargo/env"
 
 # Set GOPATH
 export GOPATH="$HOME/go"
@@ -153,8 +152,6 @@ PATH="$PATH:$HOME/.config/herd-lite/bin:$HOME/.dotnet/tools"
 # Set PHP INI Scan directory for Herd Lite
 export PHP_INI_SCAN_DIR="$HOME/.config/herd-lite/bin:$PHP_INI_SCAN_DIR"
 
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-. "/home/sebas/.deno/env"
 eval $(starship init bash)
 # eval "$(/home/sebas/.config/herd-lite/bin/laravel completion bash)"
 # source $HOME/.completion.sh
@@ -166,13 +163,9 @@ export BAT_THEME="Catppuccin Macchiato"
 
 eval "$(zoxide init bash)"
 
-# Added by `rbenv init` on Tue Jan 21 11:01:46 AM -05 2025
-eval "$(~/.rbenv/bin/rbenv init - --no-rehash bash)"
 source <(kubectl completion bash)
 export PATH="$PATH:$HOME/.config/composer/vendor/bin"
 export SWORD_PATH=~/.sword
 export EDITOR=nvim
 
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
+eval "$(~/.local/bin/mise activate)"
