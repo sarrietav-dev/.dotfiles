@@ -144,7 +144,7 @@ export ANDROID_HOME="$HOME/Android/Sdk"
 PATH="$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools"
 
 # Add Yarn global binaries to PATH
-PATH="$PATH:$(yarn global bin)"
+# PATH="$PATH:$(yarn global bin)"
 
 # Add Herd Lite and .NET tools to PATH
 PATH="$PATH:$HOME/.config/herd-lite/bin:$HOME/.dotnet/tools"
@@ -155,8 +155,6 @@ export PHP_INI_SCAN_DIR="$HOME/.config/herd-lite/bin:$PHP_INI_SCAN_DIR"
 eval $(starship init bash)
 # eval "$(/home/sebas/.config/herd-lite/bin/laravel completion bash)"
 # source $HOME/.completion.sh
-# Load Angular CLI autocompletion.
-source <(ng completion script)
 export PATH
 
 export BAT_THEME="Catppuccin Macchiato"
