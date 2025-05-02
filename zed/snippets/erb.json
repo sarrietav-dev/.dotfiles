@@ -1,0 +1,94 @@
+{
+  "Output Ruby Code": {
+    "prefix": "%=",
+    "body": ["<%= ${1:expression} %>", "$0"],
+    "description": "Outputs Ruby code in ERB"
+  },
+  "Comment in ERB": {
+    "prefix": "%#",
+    "body": ["<%# ${1:comment} %>", "$0"],
+    "description": "Adds a comment in ERB"
+  },
+  "Execute Ruby Code": {
+    "prefix": "%",
+    "body": ["<% ${1:ruby_code} %>", "$0"],
+    "description": "Executes Ruby code without output in ERB"
+  },
+  "If Statement": {
+    "prefix": "erb-if",
+    "body": ["<% if ${1:condition} %>", "  ${2:code}", "<% end %>", "$0"],
+    "description": "Creates an if statement in ERB"
+  },
+  "If-Else Statement": {
+    "prefix": "erb-if-else",
+    "body": [
+      "<% if ${1:condition} %>",
+      "  ${2:code_if_true}",
+      "<% else %>",
+      "  ${3:code_if_false}",
+      "<% end %>",
+      "$0"
+    ],
+    "description": "Creates an if-else statement in ERB"
+  },
+  "Each Loop": {
+    "prefix": "erb-each",
+    "body": [
+      "<% ${1:collection}.each do |${2:item}| %>",
+      "  ${3:code}",
+      "<% end %>",
+      "$0"
+    ],
+    "description": "Creates an each loop in ERB"
+  },
+  "For Loop": {
+    "prefix": "erb-for",
+    "body": [
+      "<% for ${1:variable} in ${2:collection} %>",
+      "  ${3:code}",
+      "<% end %>",
+      "$0"
+    ],
+    "description": "Creates a for loop in ERB"
+  },
+  "Link to Helper": {
+    "prefix": "erb-link-to",
+    "body": ["<%= link_to \"${1:Link Text}\", ${2:path} %>", "$0"],
+    "description": "Creates a link using the Rails `link_to` helper"
+  },
+  "Image Tag Helper": {
+    "prefix": "erb-image-tag",
+    "body": ["<%= image_tag \"${1:image_path}\" %>", "$0"],
+    "description": "Creates an image tag using the Rails `image_tag` helper"
+  },
+  "Form with Helper": {
+    "prefix": "erb-form-with",
+    "body": [
+      "<%= form_with model: ${1:model}, local: true do |${2:f}| %>",
+      "  ${3:form_fields}",
+      "<% end %>",
+      "$0"
+    ],
+    "description": "Creates a form using the Rails `form_with` helper"
+  },
+  "Render Partial": {
+    "prefix": "erb-render-partial",
+    "body": ["<%= render \"${1:partial_name}\" %>", "$0"],
+    "description": "Renders a partial in ERB"
+  },
+  "Yield Content": {
+    "prefix": "erb-yield",
+    "body": ["<%= yield ${1:content_block} %>", "$0"],
+    "description": "Yields content in ERB"
+  },
+  "Content for Block": {
+    "prefix": "erb-content-for",
+    "body": [
+      "<% content_for :${1:block_name} do %>",
+      "  ${2:content}",
+      "<% end %>",
+      "$0"
+    ],
+    "description": "Defines a content block using `content_for` in ERB"
+  }
+}

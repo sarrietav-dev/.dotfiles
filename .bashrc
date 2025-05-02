@@ -167,3 +167,6 @@ export SWORD_PATH=~/.sword
 export EDITOR=nvim
 
 eval "$(~/.local/bin/mise activate)"
+
+# Add Flutter to PATH
+export PATH="$PATH:$HOME/flutter/bin"

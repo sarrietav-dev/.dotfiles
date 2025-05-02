@@ -21,3 +21,5 @@
 !/tmux/**/*
 !/starship/
 !/starship/**/*
+!/zed/
+!/zed/**/*
