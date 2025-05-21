@@ -140,8 +140,12 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
 
 # Set Android SDK paths
-export ANDROID_HOME="$HOME/Android/Sdk"
-PATH="$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools"
+export ANDROID=$HOME/Android
+export ANDROID_SDK=$HOME/Android/
+export PATH=$ANDROID/latest/cmdline-tools:$PATH
+export PATH=$ANDROID/latest/cmdline-tools/bin:$PATH
+export PATH=$ANDROID/platform-tools:$PATH
+export PATH=$ANDROID_SDK:$PATH
 
 # Add Yarn global binaries to PATH
 # PATH="$PATH:$(yarn global bin)"

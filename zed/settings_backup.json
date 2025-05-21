@@ -7,10 +7,6 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
-  "base_keymap": "VSCode",
-  "features": {
-    "edit_prediction_provider": "copilot"
-  },
   "project_panel": {
     "dock": "right"
   },
@@ -20,16 +16,15 @@
       "proxy": null,
       "proxy_no_verify": null
     },
-    "enabled_in_text_threads": false
+    "enabled_in_assistant": false
   },
   "buffer_font_family": "CaskaydiaCove Nerd Font",
   "ui_font_family": "Adwaita Sans",
   "icon_theme": "Material Icon Theme",
-  "agent": {
-    "default_profile": "write",
+  "assistant": {
     "default_model": {
-      "provider": "copilot_chat",
-      "model": "gpt-4.1"
+      "provider": "zed.dev",
+      "model": "claude-3-7-sonnet-latest"
     },
     "version": "2"
   },
@@ -37,7 +32,6 @@
   "vim": {
     "toggle_relative_line_numbers": true
   },
-  "autosave": { "after_delay": { "milliseconds": 500 } },
   "ui_font_size": 16,
   "buffer_font_size": 16,
   "theme": {

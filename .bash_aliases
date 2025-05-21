@@ -5,6 +5,7 @@ alias c="clear"
 alias sail='sh $([ -f sail ] && echo sail || echo vendor/bin/sail)'
 alias clipboard='xclip -sel clip'
 alias cd='z'
+alias open='xdg-open'
 
 # eval "$(gh copilot alias -- bash)"
 #

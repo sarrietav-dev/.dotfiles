@@ -1,0 +1,53 @@
+{
+  // JavaScript code snippets
+  "Print to console": {
+    "prefix": "log",
+    "body": [
+      "console.log('$1');"
+    ],
+    "description": "Log output to console"
+  },
+  "Function declaration": {
+    "prefix": "func",
+    "body": [
+      "function $1($2) {",
+      "  $0",
+      "}"
+    ],
+    "description": "Create a function"
+  },
+  "Arrow function": {
+    "prefix": "afn",
+    "body": [
+      "const $1 = ($2) => {",
+      "  $0",
+      "};"
+    ],
+    "description": "Arrow function"
+  },
+  "For loop": {
+    "prefix": "for",
+    "body": [
+      "for (let $1 = 0; $1 < $2; $1++) {",
+      "  $0",
+      "}"
+    ],
+    "description": "For loop"
+  },
+  "If statement": {
+    "prefix": "if",
+    "body": [
+      "if ($1) {",
+      "  $0",
+      "}"
+    ],
+    "description": "If statement"
+  },
+  "Print object": {
+    "prefix": "clo",
+    "body": [
+      "console.log('$1', $1);"
+    ],
+    "description": "Log object to console"
+  }
+}
