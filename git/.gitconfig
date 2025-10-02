@@ -1,0 +1,18 @@
+[alias]
+	co = checkout
+	br = branch
+	ci = commit
+	st = status
+[pull]
+	rebase = true
+[init]
+	defaultBranch = master
+[user]
+	name = Sebastian Arrieta Villarreal
+	email = 25210925+sarrietav-dev@users.noreply.github.com
+[include]
+  path = ~/.dotfiles/git/themes.gitconfig
+[delta]
+  syntax-theme = gruvbox-dark
+[core]
+	pager = delta
