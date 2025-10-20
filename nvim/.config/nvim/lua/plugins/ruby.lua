@@ -12,4 +12,18 @@ return {
       },
     },
   },
+  {
+    "saghen/blink.cmp",
+    opts = {
+      sources = {
+        providers = {
+          snippets = {
+            opts = {
+              extended_filetypes = { ruby = { "rails" } },
+            },
+          },
+        },
+      },
+    },
+  },
 }
