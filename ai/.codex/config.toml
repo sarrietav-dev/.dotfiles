@@ -1,3 +1,6 @@
 [mcp_servers.context7]
 args = ["-y", "@upstash/context7-mcp", "--api-key", "YOUR_API_KEY"]
 command = "npx"
+
+[projects."/home/sebas/Work/vera"]
+trust_level = "trusted"
