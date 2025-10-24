@@ -4,3 +4,6 @@ command = "npx"
 
 [projects."/home/sebas/Work/vera"]
 trust_level = "trusted"
+
+[projects."/home/sebas/Work/catastro"]
+trust_level = "trusted"
