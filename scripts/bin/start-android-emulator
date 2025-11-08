@@ -1,0 +1,18 @@
+#!/bin/bash
+# Start Android emulator with Medium Phone AVD
+
+EMULATOR="/home/sebas/Android/Sdk/emulator/emulator"
+AVD_NAME="Medium_Phone_API_36.1"
+export ANDROID_AVD_HOME="/home/sebas/.config/.android/avd"
+
+# Check if emulator is already running
+if pgrep -f "emulator.*${AVD_NAME}" > /dev/null; then
+    echo "Emulator '${AVD_NAME}' is already running"
+    exit 0
+fi
+
+# Start the emulator
+echo "Starting Android emulator: ${AVD_NAME}"
+"${EMULATOR}" -avd "${AVD_NAME}" "$@" &
+
+echo "Emulator starting in background (PID: $!)"
