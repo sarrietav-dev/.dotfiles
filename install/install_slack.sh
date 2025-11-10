@@ -1,3 +1,3 @@
 #!/bin/bash
 
-yay -S --noconfirm slack
+yay -S --noconfirm slack-desktop
