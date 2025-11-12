@@ -2,4 +2,4 @@ git:
   overrideGpg: true
   pagers:
     - colorArg: always
-      pager: delta --paging=never --line-numbers --features=gruvbox-dark
+      pager: delta --paging=never --features=gruvbox-dark
