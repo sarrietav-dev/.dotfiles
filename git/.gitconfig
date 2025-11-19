@@ -8,7 +8,8 @@
 [init]
 	defaultBranch = master
 [user]
-	name = Sebastian Arrieta Villarreal
+	name = Sebastian Arrieta
+  signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDkuymYKRki3WROwOVB7PhfepB8T9Sk+cbEeNf0HWXhp
 	email = 25210925+sarrietav-dev@users.noreply.github.com
 [include]
   path = ~/.dotfiles/git/themes.gitconfig
@@ -16,3 +17,9 @@
   syntax-theme = gruvbox-dark
 [core]
 	pager = delta
+[gpg]
+  format = ssh
+[gpg "ssh"]
+  program = "/opt/1Password/op-ssh-sign"
+[commit]
+  gpgsign = true
