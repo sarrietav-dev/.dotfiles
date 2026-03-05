@@ -20,8 +20,10 @@
 [gpg]
   format = ssh
 [gpg "ssh"]
-  program = "/opt/1Password/op-ssh-sign"
+	program = /usr/bin/ssh-keygen
 [commit]
   gpgsign = true
 [credential]
 	helper = gh
+[include]
+  path = ~/.config/omarchy/current/theme/delta.gitconfig
