@@ -51,18 +51,18 @@ fi
 #   echo
 # fi
 #
-# # Method 3: Using ss (modern replacement for netstat)
-# if command -v ss >/dev/null 2>&1; then
-#   echo "Using ss:"
-#   result=$(ss -tlnp 2>/dev/null | grep ":$PORT ")
-#   if [ -n "$result" ]; then
-#     echo "$result"
-#     found=true
-#   else
-#     echo "No process found using ss"
-#   fi
-#   echo
-# fi
+# Method 3: Using ss (modern replacement for netstat)
+if command -v ss >/dev/null 2>&1; then
+  echo "Using ss:"
+  result=$(ss -tlnp 2>/dev/null | grep ":$PORT ")
+  if [ -n "$result" ]; then
+    echo "$result"
+    found=true
+  else
+    echo "No process found using ss"
+  fi
+  echo
+fi
 #
 # # Method 4: Check /proc/net/tcp (fallback)
 # if [ "$found" = false ]; then
