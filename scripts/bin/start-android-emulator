@@ -2,7 +2,7 @@
 # Start Android emulator with Medium Phone AVD
 
 EMULATOR="/home/sebas/Android/Sdk/emulator/emulator"
-AVD_NAME="Medium_Phone_API_36.1"
+AVD_NAME="Medium_Phone"
 export ANDROID_AVD_HOME="/home/sebas/.config/.android/avd"
 
 # Check if emulator is already running
