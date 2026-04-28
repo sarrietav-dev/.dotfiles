@@ -19,8 +19,15 @@ echo "Stowing config directories..."
 for dir in "${CONFIG_DIRS[@]}"; do
   if [[ -d "$DOTFILES_DIR/$dir" ]]; then
     echo "  stow: $dir"
+    # Remove conflicting non-symlink files so dotfiles take priority
+    stow --simulate --restow --dir="$DOTFILES_DIR" --target="$HOME" "$dir" 2>&1 \
+      | grep -oP "(?<=existing target is neither a link nor empty: ).+" \
+      | while IFS= read -r conflict; do
+          echo "    removing conflict: $HOME/$conflict"
+          rm -rf "$HOME/$conflict"
+        done
     stow --restow --dir="$DOTFILES_DIR" --target="$HOME" "$dir" \
-      || { echo "ERROR: stow failed for '$dir'. A conflicting file may exist at the target. Resolve it manually."; exit 1; }
+      || { echo "ERROR: stow failed for '$dir'."; exit 1; }
   else
     echo "  WARN: '$dir' not found, skipping."
   fi
