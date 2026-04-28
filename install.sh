@@ -37,7 +37,11 @@ if [[ "$SKIP_PACKAGES" == true ]]; then
   echo "Skipping package installation (--skip-packages)"
 else
   echo "Running package installations..."
+  omarchy-sudo-passwordless-toggle
+  trap 'omarchy-sudo-passwordless-toggle' EXIT
   (cd "$DOTFILES_DIR/install" && bash install.sh)
+  omarchy-sudo-passwordless-toggle
+  trap - EXIT
 fi
 
 echo "Done."
