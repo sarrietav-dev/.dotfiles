@@ -21,11 +21,11 @@ for dir in "${CONFIG_DIRS[@]}"; do
     echo "  stow: $dir"
     # Remove conflicting non-symlink files so dotfiles take priority
     stow --simulate --restow --dir="$DOTFILES_DIR" --target="$HOME" "$dir" 2>&1 \
-      | grep -oP "(?<=existing target is neither a link nor empty: ).+" \
+      | grep -oP "(?<=existing target )\S+(?= since neither)" \
       | while IFS= read -r conflict; do
           echo "    removing conflict: $HOME/$conflict"
           rm -rf "$HOME/$conflict"
-        done
+        done || true
     stow --restow --dir="$DOTFILES_DIR" --target="$HOME" "$dir" \
       || { echo "ERROR: stow failed for '$dir'."; exit 1; }
   else
