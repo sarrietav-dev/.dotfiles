@@ -62,3 +62,4 @@ if [[ "${BASH_VERSINFO[0]}" -eq 4 && "${BASH_VERSINFO[1]}" -ge 4 || "${BASH_VERS
 else
     shopt -u hostcomplete && complete -o nospace -o bashdefault -F _mise mise
 fi
+export PATH="$HOME/.config/composer/vendor/bin:$PATH"
