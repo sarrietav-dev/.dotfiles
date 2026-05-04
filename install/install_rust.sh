@@ -1,3 +1,3 @@
 #!/bin/bash
 
-omarchy-install-dev-env rust
+omarchy install dev-env rust

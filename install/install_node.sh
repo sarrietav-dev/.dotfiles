@@ -1,3 +1,3 @@
 #!/bin/bash
 
-omarchy-install-dev-env node
+omarchy install dev-env node

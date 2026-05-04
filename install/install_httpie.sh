@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-omarchy-pkg-add httpie
+omarchy pkg add httpie

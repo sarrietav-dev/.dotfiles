@@ -1,3 +1,3 @@
 #!/bin/bash
 
-omarchy-install-dev-env java
+omarchy install dev-env java

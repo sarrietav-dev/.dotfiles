@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-omarchy-pkg-add claude-code
+omarchy pkg add claude-code

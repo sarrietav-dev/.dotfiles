@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-omarchy-pkg-add dbeaver
+omarchy pkg add dbeaver

@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-omarchy-theme-set "Gruvbox"
+omarchy theme set "Gruvbox"

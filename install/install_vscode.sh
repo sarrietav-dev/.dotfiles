@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-omarchy-install-vscode
+omarchy install vscode

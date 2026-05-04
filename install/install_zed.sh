@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-omarchy-pkg-add zed
+omarchy pkg add zed

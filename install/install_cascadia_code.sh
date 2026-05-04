@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-omarchy-pkg-add ttf-cascadia-code-nerd
+omarchy pkg add ttf-cascadia-code-nerd

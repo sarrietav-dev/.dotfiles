@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-omarchy-pkg-add hl
+omarchy pkg add hl

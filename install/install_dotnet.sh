@@ -1,3 +1,3 @@
 #!/bin/bash
 
-omarchy-install-dev-env dotnet
+omarchy install dev-env dotnet
