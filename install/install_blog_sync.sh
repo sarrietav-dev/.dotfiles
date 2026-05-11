@@ -40,10 +40,9 @@ SITE_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BLOG_SRC="$HOME/Documents/Writing/blog/"
 POSTS_DST="$SITE_ROOT/_posts/"
 
-# Convert to kebab-case and ensure YYYY-MM-DD prefix from frontmatter date or file mtime
-rename_post() {
+# Calculate the proper kebab-case name with date prefix
+get_proper_name() {
   local src="$1"
-  local dst_dir="$2"
   local basename="${src##*/}"
   local name_only="${basename%.*}"
   local ext="${basename##*.}"
@@ -65,27 +64,40 @@ rename_post() {
   # Remove existing date prefix if present
   name_only=$(echo "$name_only" | sed 's/^[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}-//')
 
-  local new_name="$date-$name_only.$ext"
-  local dst="$dst_dir/$new_name"
-
-  if [[ "$src" != "$dst" ]]; then
-    cp "$src" "$dst"
-  fi
-
-  # Return the destination filename
-  echo "$new_name"
+  echo "$date-$name_only.$ext"
 }
 
-# Create destination
-mkdir -p "$POSTS_DST"
+# Rename file in-place if it doesn't have the correct format
+rename_in_place() {
+  local src="$1"
+  local basename="${src##*/}"
+  local proper_name=$(get_proper_name "$src")
+
+  if [[ "$basename" != "$proper_name" ]]; then
+    local dir="${src%/*}"
+    local new_path="$dir/$proper_name"
+    mv "$src" "$new_path"
+    echo "$new_path"
+  else
+    echo "$src"
+  fi
+}
+
+mkdir -p "$BLOG_SRC" "$POSTS_DST"
 
 # Track which posts exist in source (by new name)
 declare -A synced_posts
 
-# Copy and rename posts from blog dir
+# Rename files in blog dir and sync to posts
 for post in "$BLOG_SRC"/*.md; do
   [[ -e "$post" ]] || continue
-  new_name=$(rename_post "$post" "$POSTS_DST")
+
+  # Rename in-place if needed
+  post=$(rename_in_place "$post")
+
+  # Copy to posts dir
+  new_name=$(basename "$post")
+  cp "$post" "$POSTS_DST/$new_name"
   synced_posts["$new_name"]=1
 done
 
@@ -98,7 +110,15 @@ for post in "$POSTS_DST"/*.md; do
   fi
 done
 
-# Commit and push (gracefully handle auth/connectivity issues)
+# Commit changes in both repos
+cd "$BLOG_SRC" && cd "$BLOG_SRC/.."
+if [[ -d .git ]]; then
+  git add -A
+  if ! git diff --cached --quiet 2>/dev/null; then
+    git commit -m "blog: rename posts to kebab-case with date" || true
+  fi
+fi
+
 cd "$SITE_ROOT"
 git add -A
 git diff --cached --quiet && { echo "blog: no changes"; exit 0; }
