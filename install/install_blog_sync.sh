@@ -110,13 +110,16 @@ for post in "$POSTS_DST"/*.md; do
   fi
 done
 
-# Commit changes in both repos
-cd "$BLOG_SRC" && cd "$BLOG_SRC/.."
-if [[ -d .git ]]; then
-  git add -A
-  if ! git diff --cached --quiet 2>/dev/null; then
-    git commit -m "blog: rename posts to kebab-case with date" || true
-  fi
+# Commit changes in Writing repo if it exists
+WRITING_REPO="$(cd "$BLOG_SRC" 2>/dev/null && cd .. && pwd 2>/dev/null)" || WRITING_REPO=""
+if [[ -n "$WRITING_REPO" && -d "$WRITING_REPO/.git" ]]; then
+  (
+    cd "$WRITING_REPO"
+    git add -A
+    if ! git diff --cached --quiet 2>/dev/null; then
+      git commit -m "blog: rename posts to kebab-case with date" || true
+    fi
+  ) || true
 fi
 
 cd "$SITE_ROOT"
