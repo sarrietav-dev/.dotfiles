@@ -63,3 +63,5 @@ else
     shopt -u hostcomplete && complete -o nospace -o bashdefault -F _mise mise
 fi
 export PATH="$HOME/.config/composer/vendor/bin:$PATH"
+
+eval "$(mise activate bash)"

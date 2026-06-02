@@ -13,3 +13,10 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.opt_local.indentkeys:remove(".")
   end,
 })
+
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+  pattern = "*/app/prompts/*/instructions.txt.erb",
+  callback = function()
+    vim.b.autoformat = false
+  end,
+})
