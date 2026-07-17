@@ -42,6 +42,10 @@ else
   (cd "$DOTFILES_DIR/install" && bash install.sh)
   omarchy-sudo-passwordless-toggle
   trap - EXIT
+
+  echo "Setting up Vicinae as the launcher..."
+  "$DOTFILES_DIR/scripts/bin/omarchy-launcher-mode" vicinae
+  "$DOTFILES_DIR/scripts/bin/omarchy-sync-vicinae-theme"
 fi
 
 echo "Done."
