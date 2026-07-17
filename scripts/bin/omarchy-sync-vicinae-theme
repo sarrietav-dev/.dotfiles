@@ -20,13 +20,15 @@ if [[ ! -f $COLORS_FILE ]]; then
 fi
 
 get() {
-  grep -E "^$1 = " "$COLORS_FILE" | head -1 | sed -E 's/^[a-zA-Z0-9_]+ = "(.*)"/\1/'
+  grep -E "^$1[[:space:]]*=" "$COLORS_FILE" | head -1 | sed -E 's/^[a-zA-Z0-9_]+[[:space:]]*=[[:space:]]*"(.*)"/\1/'
 }
 
 accent=$(get accent)
 foreground=$(get foreground)
 background=$(get background)
 selection_background=$(get selection_background)
+selection_foreground=$(get selection_foreground)
+black=$(get color0)
 red=$(get color1)
 green=$(get color2)
 yellow=$(get color3)
@@ -34,6 +36,13 @@ blue=$(get color4)
 magenta=$(get color5)
 cyan=$(get color6)
 white=$(get color7)
+
+for name in accent foreground background black red green yellow blue magenta cyan white; do
+  if [[ -z ${!name} ]]; then
+    echo "Failed to parse '$name' from $COLORS_FILE -- refusing to write a broken theme" >&2
+    exit 1
+  fi
+done
 
 variant="dark"
 [[ -f $THEME_DIR/light.mode ]] && variant="light"
@@ -55,7 +64,7 @@ inherits = "vicinae-$variant"
 accent = "$accent"
 background = "$background"
 foreground = "$foreground"
-secondary_background = "$selection_background"
+secondary_background = "$black"
 border = "$white"
 
 [colors.accents]
@@ -67,6 +76,16 @@ purple = "$magenta"
 red = "$red"
 yellow = "$yellow"
 cyan = "$cyan"
+
+# Omarchy's selection_background/foreground are chosen for highlighting a
+# span of terminal text, which is often deliberately vivid (e.g. Catppuccin's
+# cream or Gruvbox's bright orange). That's the right place for them: actual
+# text selection. It's the wrong color for a full list-row background fill,
+# which is why secondary_background above uses color0 (a muted panel tone)
+# instead -- Vicinae's list/grid selection highlight derives from it.
+[colors.text.selection]
+background = "$selection_background"
+foreground = "$selection_foreground"
 EOF
 
 vicinae theme set omarchy
