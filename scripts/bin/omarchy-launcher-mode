@@ -1,0 +1,93 @@
+#!/bin/bash
+# Switch between Omarchy's default Walker launcher and the Vicinae port.
+#
+# Usage: omarchy-launcher-mode [vicinae|walker|status]
+#
+# "vicinae" mode:
+#   - stops/disables elephant.service + Walker's autostart entry
+#   - enables/starts vicinae.service
+#   - activates the Super+Space / Super+Alt+Space / Super+Escape Vicinae binds
+#     in ~/.config/hypr/bindings.conf (block marked vicinae-launcher-override)
+#
+# "walker" mode reverses all of the above. Walker's own launch script
+# (omarchy-launch-walker) lazily restarts elephant + walker if they aren't
+# running, so this doesn't need to forcibly relaunch them.
+
+set -euo pipefail
+
+BINDINGS="$HOME/.config/hypr/bindings.conf"
+WALKER_AUTOSTART="$HOME/.config/autostart/walker.desktop"
+
+# GNU sed -i writes a temp file and renames it over the given path. If that
+# path is a symlink (bindings.conf lives in a dotfiles repo and is symlinked
+# in), the rename destroys the symlink and replaces it with a plain file,
+# silently disconnecting the live config from the dotfiles repo. Always sed
+# through the resolved real path instead so the symlink itself is untouched.
+[ -L "$BINDINGS" ] && BINDINGS="$(readlink -f "$BINDINGS")"
+[ -L "$WALKER_AUTOSTART" ] && WALKER_AUTOSTART="$(readlink -f "$WALKER_AUTOSTART")"
+START_MARKER=">>> vicinae-launcher-override"
+END_MARKER="<<< vicinae-launcher-override"
+
+reload_hypr() {
+  command -v hyprctl >/dev/null 2>&1 && hyprctl reload >/dev/null 2>&1 || true
+}
+
+status() {
+  if systemctl --user is-active --quiet vicinae.service; then
+    echo "vicinae.service: active"
+  else
+    echo "vicinae.service: inactive"
+  fi
+  if systemctl --user is-active --quiet elephant.service; then
+    echo "elephant.service: active"
+  else
+    echo "elephant.service: inactive"
+  fi
+  if grep -q "^Hidden=true" "$WALKER_AUTOSTART" 2>/dev/null; then
+    echo "walker autostart: hidden"
+  else
+    echo "walker autostart: enabled"
+  fi
+  if grep -qE "^(unbind|bindd) = " <(sed -n "/$START_MARKER/,/$END_MARKER/p" "$BINDINGS"); then
+    echo "hypr binds: vicinae"
+  else
+    echo "hypr binds: walker (omarchy default)"
+  fi
+}
+
+to_vicinae() {
+  sed -i "/$START_MARKER/,/$END_MARKER/ s/^# \(unbind = \|bindd = \)/\1/" "$BINDINGS"
+
+  systemctl --user stop app-walker@autostart.service >/dev/null 2>&1 || true
+  systemctl --user disable --now elephant.service >/dev/null 2>&1 || true
+  if ! grep -q "^Hidden=true" "$WALKER_AUTOSTART" 2>/dev/null; then
+    sed -i '/^Hidden=true/d' "$WALKER_AUTOSTART"
+    echo "Hidden=true" >> "$WALKER_AUTOSTART"
+  fi
+
+  systemctl --user enable --now vicinae.service
+
+  reload_hypr
+  echo "Switched to vicinae."
+}
+
+to_walker() {
+  sed -i "/$START_MARKER/,/$END_MARKER/ s/^\(unbind = \|bindd = \)/# \1/" "$BINDINGS"
+
+  systemctl --user disable --now vicinae.service >/dev/null 2>&1 || true
+  sed -i '/^Hidden=true/d' "$WALKER_AUTOSTART"
+  systemctl --user enable --now elephant.service >/dev/null 2>&1 || true
+
+  reload_hypr
+  echo "Switched to walker (omarchy default). Elephant + Walker will lazily restart on next Super+Space if needed."
+}
+
+case "${1:-}" in
+  vicinae) to_vicinae ;;
+  walker) to_walker ;;
+  status) status ;;
+  *)
+    echo "Usage: omarchy-launcher-mode [vicinae|walker|status]" >&2
+    exit 1
+    ;;
+esac
