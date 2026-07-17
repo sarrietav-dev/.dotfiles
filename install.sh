@@ -3,7 +3,7 @@ set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-CONFIG_DIRS=(ai bash git ghostty hypr kitty nvim waybar zellij scripts)
+CONFIG_DIRS=(ai bash git ghostty hypr kitty nvim waybar zellij scripts vicinae)
 
 SKIP_PACKAGES=false
 for arg in "$@"; do
