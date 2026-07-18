@@ -1,0 +1,8 @@
+[Unit]
+Description=Watch for Omarchy theme changes to live-resync Vicinae's theme
+
+[Path]
+PathModified=%h/.config/omarchy/current/theme.name
+
+[Install]
+WantedBy=graphical-session.target

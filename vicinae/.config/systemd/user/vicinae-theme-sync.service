@@ -1,0 +1,9 @@
+[Unit]
+Description=Sync Vicinae's theme to the currently active Omarchy theme
+
+[Service]
+Type=oneshot
+ExecStart=%h/bin/omarchy-sync-vicinae-theme
+
+[Install]
+WantedBy=graphical-session.target

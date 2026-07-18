@@ -37,10 +37,10 @@ if [[ "$SKIP_PACKAGES" == true ]]; then
   echo "Skipping package installation (--skip-packages)"
 else
   echo "Running package installations..."
-  omarchy sudo passwordless 
-  trap 'omarchy-sudo-passwordless-toggle' EXIT
+  omarchy-sudo-passwordless 30
+  trap 'omarchy-sudo-passwordless 30' EXIT
   (cd "$DOTFILES_DIR/install" && bash install.sh)
-  omarchy sudo passwordless 
+  omarchy-sudo-passwordless 30
   trap - EXIT
 
   echo "Setting up Vicinae as the launcher..."
