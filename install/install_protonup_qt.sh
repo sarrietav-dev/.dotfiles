@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-yay -S --no-confirm protonup-qt-bin
+yay -S --noconfirm protonup-qt-bin

@@ -8,12 +8,12 @@ sudo pacman -S --needed \
 
 sudo pacman -S --needed webkit2gtk libsecret
 
-sudo pacman -S chromium firefox
+sudo pacman -S --needed --noconfirm chromium firefox
 
 sudo pacman -S --needed icu libxml2 flite libwebp libvpx
 
 sudo mkdir -p /opt/google/chrome
-sudo ln -s /usr/bin/chromium /opt/google/chrome/chrome
+sudo ln -sf /usr/bin/chromium /opt/google/chrome/chrome
 
 npm install -g @playwright/cli@latest
 playwright-cli install-browser
