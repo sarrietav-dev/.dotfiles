@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-yay -S --noconfirm bruno
+yay -S --noconfirm bruno-bin
