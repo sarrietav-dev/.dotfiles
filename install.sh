@@ -3,7 +3,7 @@ set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-CONFIG_DIRS=(ai bash git ghostty hypr kitty nvim waybar zellij scripts vicinae)
+CONFIG_DIRS=(ai bash git ghostty hypr kitty nvim waybar zellij scripts)
 
 SKIP_PACKAGES=false
 for arg in "$@"; do
@@ -42,10 +42,6 @@ else
   (cd "$DOTFILES_DIR/install" && bash install.sh)
   omarchy-sudo-passwordless 30
   trap - EXIT
-
-  echo "Setting up Vicinae as the launcher..."
-  "$DOTFILES_DIR/scripts/bin/omarchy-launcher-mode" vicinae
-  "$DOTFILES_DIR/scripts/bin/omarchy-sync-vicinae-theme"
 fi
 
 echo "Done."
