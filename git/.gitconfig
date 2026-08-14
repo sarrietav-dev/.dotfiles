@@ -15,8 +15,13 @@
   path = ~/.dotfiles/git/themes.gitconfig
 [delta]
   syntax-theme = gruvbox-dark
-; [core]
-; 	pager = delta
+  navigate = true
+[core]
+	pager = delta
+[pager]
+	log = delta
+[interactive]
+	diffFilter = delta --color-only --features=interactive
 [gpg]
   format = ssh
 [gpg "ssh"]
