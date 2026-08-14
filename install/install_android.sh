@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-yay -S --noconfirm android-studio
+omarchy pkg aur add android-studio

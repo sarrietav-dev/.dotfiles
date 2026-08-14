@@ -1,3 +1,3 @@
 #!/bin/bash
 
-yay -S --noconfirm brave-bin
+omarchy install browser brave

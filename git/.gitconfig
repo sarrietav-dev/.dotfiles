@@ -25,7 +25,5 @@
   gpgsign = true
 [credential]
 	helper = gh
-[include]
-  path = ~/.config/omarchy/current/theme/delta.gitconfig
 [rebase]
 	updateRefs = true

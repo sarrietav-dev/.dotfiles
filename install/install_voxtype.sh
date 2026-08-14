@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-omarchy pkg add voxtype
+omarchy pkg add voxtype-bin

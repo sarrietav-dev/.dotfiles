@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-omarchy pkg add bitwarden bitwarden-cli
+omarchy install and launch Bitwarden bitwarden bitwarden-cli bitwarden

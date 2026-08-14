@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-yay -S --noconfirm bruno-bin
+omarchy pkg aur add bruno-bin

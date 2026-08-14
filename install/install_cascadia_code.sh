@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-omarchy pkg add ttf-cascadia-code-nerd
+omarchy install font 'Cascadia Code' ttf-cascadia-code-nerd 'CaskaydiaCove Nerd Font'

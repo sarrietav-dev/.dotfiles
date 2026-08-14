@@ -1,3 +1,3 @@
 #!/bin/bash
 
-yay -S --noconfirm slack-desktop
+omarchy pkg aur add slack-desktop
