@@ -35,6 +35,8 @@
 
 -- Replace default bindings that we don't want (Omawrite, Agent, Hey Calendar).
 hl.unbind("SUPER + SHIFT + C")
+hl.unbind("SUPER + SHIFT + CTRL + C")
+hl.unbind("SUPER + CTRL + ALT + D")
 hl.unbind("SUPER + SHIFT + ALT + A")
 hl.unbind("SUPER + SHIFT + G")
 
@@ -46,7 +48,8 @@ o.bind("SUPER + SHIFT + CTRL + SLASH", "Passwords (quick access)", "uwsm-app -- 
 o.bind("SUPER + SHIFT + ALT + A", "Gemini", { webapp = "https://gemini.google.com" })
 o.bind("SUPER + SHIFT + CTRL + T", "Google Tasks",
   { webapp = "https://tasks.google.com/mobile/list/~default", focus = true })
-o.bind("SUPER + SHIFT + C", "Calendar", { webapp = "https://calendar.google.com" })
+o.bind("SUPER + SHIFT + C", "Google Calendar", { webapp = "https://calendar.google.com" })
+o.bind("SUPER + SHIFT + CTRL + C", "Omarchy calendar", "omarchy-shell shell toggle omarchy.clock")
 
 hl.unbind("PRINT")
 hl.unbind("F12")
