@@ -36,6 +36,7 @@
 -- Replace default bindings that we don't want (Omawrite, Agent, Hey Calendar).
 hl.unbind("SUPER + SHIFT + C")
 hl.unbind("SUPER + SHIFT + ALT + A")
+hl.unbind("SUPER + SHIFT + G")
 
 -- Extra application bindings.
 o.bind("SUPER + SHIFT + CTRL + B", "Browser (Work)", "uwsm-app -- google-chrome-stable --new-window")
