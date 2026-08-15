@@ -46,3 +46,17 @@ o.bind("SUPER + SHIFT + ALT + A", "Gemini", { webapp = "https://gemini.google.co
 o.bind("SUPER + SHIFT + CTRL + T", "Google Tasks",
   { webapp = "https://tasks.google.com/mobile/list/~default", focus = true })
 o.bind("SUPER + SHIFT + C", "Calendar", { webapp = "https://calendar.google.com" })
+
+hl.unbind("PRINT")
+hl.unbind("F12")
+hl.unbind("ALT + SHIFT + 4")
+
+o.bind("PRINT", "Screenshot", "omasnap")
+o.bind("F12", "Screenshot", "omasnap")
+o.bind("ALT + SHIFT + 4", "Screenshot", "omasnap")
+
+hl.layer_rule({
+  match = { namespace = "^omasnap$" },
+  no_anim = true,
+  animation = "none",
+})
