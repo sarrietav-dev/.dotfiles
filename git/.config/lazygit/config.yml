@@ -2,6 +2,10 @@ git:
   overrideGpg: true
   diffRenderers:
     - type: stdinFilter
+      name: hunk
+      colorArg: always
+      command: hunk pager
+    - type: stdinFilter
       name: delta
       colorArg: always
       command: delta --paging=never

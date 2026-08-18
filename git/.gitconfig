@@ -17,7 +17,7 @@
   syntax-theme = gruvbox-dark
   navigate = true
 [core]
-	pager = delta
+	pager = hunk pager
 [pager]
 	log = delta
 [interactive]
