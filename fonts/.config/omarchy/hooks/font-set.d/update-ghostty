@@ -1,0 +1,8 @@
+#!/bin/bash
+# Update Ghostty config when system font changes
+FONT_NAME="$1"
+GHOSTTY_CONFIG="$HOME/.config/ghostty/config"
+
+if [ -f "$GHOSTTY_CONFIG" ]; then
+  sed -i "s/^font-family = .*/font-family = \"$FONT_NAME\"/" "$GHOSTTY_CONFIG"
+fi
