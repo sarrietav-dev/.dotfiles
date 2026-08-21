@@ -32,3 +32,9 @@
 	helper = gh
 [rebase]
 	updateRefs = true
+[diff]
+	tool = hunk
+[difftool "hunk"]
+	cmd = hunk difftool \"$LOCAL\" \"$REMOTE\" \"$MERGED\"
+[difftool]
+	prompt = false

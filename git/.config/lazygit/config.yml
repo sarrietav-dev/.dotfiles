@@ -9,3 +9,19 @@ git:
       name: delta
       colorArg: always
       command: delta --paging=never
+customCommands:
+  - key: '<c-t>'
+    context: 'commits, subCommits, reflogCommits'
+    command: 'hunk show {{.SelectedCommit.Hash}}'
+    description: 'Open commit diff in hunk'
+    output: terminal
+  - key: '<c-t>'
+    context: 'files'
+    command: 'hunk diff -- {{.SelectedFile.Name | quote}}'
+    description: 'Open file diff in hunk'
+    output: terminal
+  - key: '<c-t>'
+    context: 'stash'
+    command: 'hunk stash show stash@{{.SelectedStashEntry.Index}}'
+    description: 'Open stash diff in hunk'
+    output: terminal

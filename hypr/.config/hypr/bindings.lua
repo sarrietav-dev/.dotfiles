@@ -58,6 +58,7 @@ hl.unbind("ALT + SHIFT + 4")
 o.bind("PRINT", "Screenshot", "omasnap")
 o.bind("F12", "Screenshot", "omasnap")
 o.bind("ALT + SHIFT + 4", "Screenshot", "omasnap")
+o.bind("F10", "Voice assistant", "~/.config/omarchy/plugins/sarrietav-dev.omassistant/bin/omassistant-toggle")
 
 hl.layer_rule({
   match = { namespace = "^omasnap$" },
