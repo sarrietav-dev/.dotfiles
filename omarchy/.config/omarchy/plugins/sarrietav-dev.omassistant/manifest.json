@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "sarrietav-dev.omassistant",
+  "name": "Omassistant",
+  "version": "1.0.0",
+  "author": "sarrietav-dev",
+  "license": "MIT",
+  "description": "A voice assistant with a pixel-art companion.",
+  "kinds": ["overlay"],
+  "keepLoaded": true,
+  "entryPoints": {
+    "overlay": "Assistant.qml"
+  }
+}

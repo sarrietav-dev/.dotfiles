@@ -1,0 +1,34 @@
+#!/bin/bash
+
+set -euo pipefail
+
+data_home="${XDG_DATA_HOME:-$HOME/.local/share}/omassistant"
+piper_home="$data_home/piper"
+voice_dir="$piper_home/voices"
+
+missing=()
+for command in uv ffmpeg jq pw-play voxtype omarchy-shell voxtype-audio-bridge; do
+  command -v "$command" >/dev/null 2>&1 || missing+=("$command")
+done
+
+if ((${#missing[@]})); then
+  printf 'Missing required commands: %s\n' "${missing[*]}" >&2
+  exit 1
+fi
+
+mkdir -p "$voice_dir"
+
+if [[ ! -x $piper_home/.venv/bin/piper ]] || ! "$piper_home/.venv/bin/piper" --help >/dev/null 2>&1; then
+  uv venv --clear "$piper_home/.venv"
+  uv pip install --python "$piper_home/.venv/bin/python" piper-tts
+fi
+
+if [[ ! -f $voice_dir/en_US-ryan-medium.onnx || ! -f $voice_dir/en_US-ryan-medium.onnx.json ]]; then
+  "$piper_home/.venv/bin/python" -m piper.download_voices \
+    --data-dir "$voice_dir" en_US-ryan-medium
+fi
+
+printf '\nOmassistant voice dependencies are ready.\n\n'
+printf 'Add this binding to ~/.config/hypr/bindings.lua:\n\n'
+printf '%s\n' 'o.bind("F10", "Voice assistant", "~/.config/omarchy/plugins/sarrietav-dev.omassistant/bin/omassistant-toggle")'
+printf '\nThen run: hyprctl reload && hyprctl configerrors\n'

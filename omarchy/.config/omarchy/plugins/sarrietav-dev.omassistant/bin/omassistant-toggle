@@ -1,0 +1,243 @@
+#!/bin/bash
+
+set -u
+
+runtime_dir="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/omassistant"
+state_file="$runtime_dir/state"
+prompt_file="$runtime_dir/prompt.txt"
+response_file="$runtime_dir/response.txt"
+events_file="$runtime_dir/agent-output.jsonl"
+worker_file="$runtime_dir/worker.pid"
+lock_file="$runtime_dir/lock"
+log_file="$runtime_dir/worker.log"
+piper_home="${XDG_DATA_HOME:-$HOME/.local/share}/omassistant/piper"
+piper="$piper_home/.venv/bin/piper"
+voice="$piper_home/voices/en_US-ryan-medium.onnx"
+script_path="$(readlink -f "$0")"
+
+mkdir -p "$runtime_dir"
+
+read_state() {
+  if [[ -f $state_file ]]; then
+    read -r current_state <"$state_file"
+  else
+    current_state="idle"
+  fi
+}
+
+write_state() {
+  local next="$1"
+  printf '%s\n' "$next" >"$state_file.tmp"
+  mv "$state_file.tmp" "$state_file"
+}
+
+send_ui() {
+  local phase="$1" prompt="${2:-}" response="${3:-}" error="${4:-}" payload
+  payload=$(jq -cn \
+    --arg phase "$phase" \
+    --arg prompt "$prompt" \
+    --arg response "$response" \
+    --arg error "$error" \
+    '{phase:$phase,prompt:$prompt,response:$response,error:$error}')
+  omarchy-shell sarrietav-dev.omassistant setState "$payload" >/dev/null 2>&1 || true
+}
+
+reset_idle() {
+  write_state idle
+  rm -f "$worker_file"
+  send_ui idle
+}
+
+fail() {
+  local message="$1"
+  write_state error
+  send_ui error "" "" "$message"
+  sleep 4
+  reset_idle
+}
+
+clean_for_speech() {
+  sed -E \
+    -e 's/```[^`]*```/Code omitted./g' \
+    -e 's/`([^`]*)`/\1/g' \
+    -e 's/[*_#>]//g' \
+    -e 's/\[([^]]+)\]\([^)]*\)/\1/g' \
+    -e 's/[[:space:]]+/ /g'
+}
+
+run_default_agent() {
+  local agent="$1" request="$2"
+  : >"$response_file"
+  : >"$events_file"
+  : >"$runtime_dir/agent-error.log"
+
+  case "$agent" in
+    opencode)
+      if ! timeout 180 opencode run --auto --format json "$request" \
+          >"$events_file" 2>"$runtime_dir/agent-error.log"; then
+        return 1
+      fi
+      jq -rs '[.[] | select(.type == "text") | select((.part.metadata.openai.phase // "final_answer") == "final_answer") | .part.text] | join("")' \
+        "$events_file" >"$response_file"
+      ;;
+    claude)
+      timeout 180 claude --print --dangerously-skip-permissions "$request" \
+        >"$response_file" 2>"$runtime_dir/agent-error.log"
+      ;;
+    codex)
+      timeout 180 codex exec --dangerously-bypass-approvals-and-sandbox --skip-git-repo-check \
+        --color never --output-last-message "$response_file" "$request" \
+        >"$events_file" 2>"$runtime_dir/agent-error.log"
+      ;;
+    gemini)
+      timeout 180 gemini --yolo --prompt "$request" --output-format text \
+        >"$response_file" 2>"$runtime_dir/agent-error.log"
+      ;;
+    copilot)
+      timeout 180 copilot --allow-all --silent --prompt "$request" \
+        >"$response_file" 2>"$runtime_dir/agent-error.log"
+      ;;
+    crush)
+      timeout 180 crush run --quiet "$request" \
+        >"$response_file" 2>"$runtime_dir/agent-error.log"
+      ;;
+    grok)
+      timeout 180 grok --permission-mode bypassPermissions --single "$request" --output-format plain \
+        >"$response_file" 2>"$runtime_dir/agent-error.log"
+      ;;
+    omp)
+      timeout 180 omp --auto-approve --print "$request" \
+        >"$response_file" 2>"$runtime_dir/agent-error.log"
+      ;;
+    pi)
+      timeout 180 pi --print "$request" \
+        >"$response_file" 2>"$runtime_dir/agent-error.log"
+      ;;
+    *)
+      printf 'Unsupported Omarchy default agent: %s\n' "$agent" >"$runtime_dir/agent-error.log"
+      return 1
+      ;;
+  esac
+}
+
+process_request() {
+  local count=0 prompt agent request response spoken now
+  while [[ $count -lt 200 ]]; do
+    [[ -s $prompt_file ]] && break
+    sleep 0.1
+    count=$((count + 1))
+  done
+
+  if [[ ! -s $prompt_file ]]; then
+    fail "Voxtype did not return a transcript."
+    exit 1
+  fi
+
+  prompt=$(tr '\n' ' ' <"$prompt_file" | sed -E 's/^[[:space:]]+|[[:space:]]+$//g')
+  if [[ -z $prompt ]]; then
+    fail "I did not hear anything."
+    exit 1
+  fi
+
+  write_state thinking
+  send_ui thinking "$prompt"
+  now=$(date '+%A, %B %d, %Y at %I:%M %p %Z')
+  agent=$(omarchy-default-agent)
+  if [[ -z $agent ]]; then
+    fail "Choose an Omarchy default agent first."
+    exit 1
+  fi
+  request="You are the user's Omarchy desktop voice assistant with full access. Fulfill action requests using your tools, preferring Omarchy commands and conventions for desktop tasks. Use current documentation or installed Omarchy files when needed. Keep the final answer concise and natural for speech. Current local date and time: $now. User said: $prompt"
+
+  if ! run_default_agent "$agent" "$request"; then
+    fail "The Omarchy default agent could not answer."
+    exit 1
+  fi
+
+  response=$(sed -E 's/\x1B\[[0-9;]*[[:alpha:]]//g' "$response_file" | sed -E '/^[[:space:]]*$/d')
+  if [[ -z $response ]]; then
+    fail "The assistant returned an empty answer."
+    exit 1
+  fi
+  printf '%s\n' "$response" >"$response_file"
+
+  write_state speaking
+  send_ui speaking "$prompt" "$response"
+
+  if [[ ! -x $piper || ! -f $voice ]]; then
+    fail "Piper voice is not installed."
+    exit 1
+  fi
+
+  spoken=$(printf '%s' "$response" | clean_for_speech)
+  if ! printf '%s\n' "$spoken" | "$piper" -m "$voice" -f "$runtime_dir/response.wav" \
+      >"$runtime_dir/piper.log" 2>&1; then
+    fail "Piper could not synthesize the answer."
+    exit 1
+  fi
+
+  if ! ffmpeg -nostdin -hide_banner -loglevel error -y -i "$runtime_dir/response.wav" \
+      -af "adelay=1000:all=1" "$runtime_dir/response-padded.wav"; then
+    fail "The answer audio could not be prepared."
+    exit 1
+  fi
+
+  if ! pw-play --latency=100ms "$runtime_dir/response-padded.wav"; then
+    fail "The answer audio could not be played."
+    exit 1
+  fi
+
+  sleep 1
+  reset_idle
+}
+
+cancel_current() {
+  voxtype record cancel >/dev/null 2>&1 || true
+  if [[ -f $worker_file ]]; then
+    read -r worker_pid <"$worker_file"
+    if [[ $worker_pid =~ ^[0-9]+$ ]]; then
+      kill -- "-$worker_pid" >/dev/null 2>&1 || kill "$worker_pid" >/dev/null 2>&1 || true
+    fi
+  fi
+  reset_idle
+}
+
+if [[ ${1:-} == "process" ]]; then
+  process_request
+  exit
+fi
+
+exec 9>"$lock_file"
+flock -n 9 || exit 0
+
+read_state
+case "$current_state" in
+  idle | error)
+    rm -f "$prompt_file" "$response_file" "$worker_file"
+    if ! omarchy-shell sarrietav-dev.omassistant ping >/dev/null 2>&1; then
+      omarchy-shell shell summon sarrietav-dev.omassistant '{}' >/dev/null 2>&1 || exit 1
+    fi
+    if voxtype record start --file="$prompt_file" >/dev/null 2>&1; then
+      write_state listening
+      send_ui listening
+    else
+      fail "Voxtype could not start recording."
+    fi
+    ;;
+  listening)
+    write_state transcribing
+    send_ui transcribing
+    if ! voxtype record stop >/dev/null 2>&1; then
+      fail "Voxtype could not stop recording."
+      exit 1
+    fi
+    setsid "$script_path" process >>"$log_file" 2>&1 &
+    printf '%s\n' "$!" >"$worker_file"
+    ;;
+  transcribing | thinking | speaking)
+    cancel_current
+    ;;
+  *)
+    reset_idle
+    ;;
+esac
