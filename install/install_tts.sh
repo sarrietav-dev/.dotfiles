@@ -21,14 +21,18 @@ declare -A VOICES=(
 
 BASE="https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US"
 
-mkdir -p "$VOICE_ROOT"
+sudo mkdir -p "$VOICE_ROOT"
 for rel in "${!VOICES[@]}"; do
   model="$VOICE_ROOT/$rel.onnx"
   if [[ ! -f "$model" ]]; then
-    mkdir -p "$(dirname "$model")"
     echo "Downloading voice: $rel"
-    curl -sL -o "$model" "$BASE/$rel.onnx"
-    curl -sL -o "$model.json" "$BASE/$rel.onnx.json"
+    tmp_model=$(mktemp)
+    tmp_json=$(mktemp)
+    curl -sL -o "$tmp_model" "$BASE/$rel.onnx"
+    curl -sL -o "$tmp_json" "$BASE/$rel.onnx.json"
+    sudo install -Dm644 "$tmp_model" "$model"
+    sudo install -Dm644 "$tmp_json" "$model.json"
+    rm -f "$tmp_model" "$tmp_json"
   fi
 done
 
