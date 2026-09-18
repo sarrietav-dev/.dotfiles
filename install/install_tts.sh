@@ -58,7 +58,7 @@ GenericSoundIconFolder "/usr/share/sounds/sound-icons/"
 
 GenericDefaultCharset "utf-8"
 
-AddVoice	"en"	"MALE1"		"/usr/share/piper-voices/en/en_US/lessac/high/en_US-lessac-high.onnx"
+AddVoice	"en"	"MALE1"		"/usr/share/piper-voices/en/en_US/lessac/medium/en_US-lessac-medium.onnx"
 AddVoice	"en"	"MALE2"		"/usr/share/piper-voices/en/en_US/ryan/high/en_US-ryan-high.onnx"
 AddVoice	"en"	"MALE3"		"/usr/share/piper-voices/en/en_US/hfc_male/medium/en_US-hfc_male-medium.onnx"
 AddVoice	"en"	"FEMALE1"	"/usr/share/piper-voices/en/en_US/amy/medium/en_US-amy-medium.onnx"
@@ -66,7 +66,7 @@ AddVoice	"en"	"FEMALE2"	"/usr/share/piper-voices/en/en_US/amy/low/en_US-amy-low.
 AddVoice	"en"	"FEMALE3"	"/usr/share/piper-voices/en/en_US/libritts_r/medium/en_US-libritts_r-medium.onnx"
 AddVoice	"en"	"CHILD_MALE"	"/usr/share/piper-voices/en/en_US/kristin/medium/en_US-kristin-medium.onnx"
 
-DefaultVoice	"/usr/share/piper-voices/en/en_US/lessac/high/en_US-lessac-high.onnx"
+DefaultVoice	"/usr/share/piper-voices/en/en_US/lessac/medium/en_US-lessac-medium.onnx"
 
 GenericRateForceInteger 0
 GenericRateMultiply 0
