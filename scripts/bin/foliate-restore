@@ -1,0 +1,52 @@
+#!/bin/bash
+# Restore a Foliate backup created by foliate-backup.
+# Usage: foliate-restore <backup.tar.gz> [--dry-run]
+# Restores to the native path (or Flatpak/Snap path if that is what you use).
+set -euo pipefail
+
+if [[ $# -lt 1 || "$1" == "-h" || "$1" == "--help" ]]; then
+  echo "Usage: foliate-restore <backup.tar.gz> [--dry-run]" >&2
+  echo "Available backups:" >&2
+  ls -1 "${FOLIATE_BACKUP_DIR:-$HOME/.local/share/foliate-backups}" 2>/dev/null || true
+  exit 1
+fi
+
+BACKUP="$1"
+DRY_RUN=false
+[[ "${2:-}" == "--dry-run" ]] && DRY_RUN=true
+
+if [[ ! -f "$BACKUP" ]]; then
+  echo "Not found: $BACKUP" >&2
+  exit 1
+fi
+
+# Detect target: prefer existing install, fall back to native path
+NATIVE="$HOME/.local/share/com.github.johnfactotum.Foliate"
+FLATPAK="$HOME/.var/app/com.github.johnfactotum.Foliate/data/com.github.johnfactotum.Foliate"
+SNAP="$HOME/snap/foliate/current/.local/share/com.github.johnfactotum.Foliate"
+TARGET="$NATIVE"
+for candidate in "$NATIVE" "$FLATPAK" "$SNAP"; do
+  if [[ -d "$candidate" ]]; then
+    TARGET="$candidate"
+    break
+  fi
+done
+DEST_PARENT="$(dirname "$TARGET")"
+
+if $DRY_RUN; then
+  echo "Would extract $BACKUP -> $DEST_PARENT/ (target: $TARGET)"
+  tar -tzf "$BACKUP" | head -20
+  exit 0
+fi
+
+# Safety: keep a pre-restore copy
+SAFETY="$DEST_PARENT/$(basename "$TARGET").pre-restore-$(date +%F-%H%M)"
+if [[ -d "$TARGET" ]]; then
+  cp -a "$TARGET" "$SAFETY"
+  echo "Pre-restore copy: $SAFETY"
+fi
+
+mkdir -p "$DEST_PARENT"
+tar -xzf "$BACKUP" -C "$DEST_PARENT"
+echo "Restored $BACKUP -> $TARGET"
+echo "Restart Foliate to see it."

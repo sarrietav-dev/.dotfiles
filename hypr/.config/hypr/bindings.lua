@@ -33,12 +33,14 @@
 -- Editor, Music, Music TUI, Docker, Obsidian, Passwords, ChatGPT, Email,
 -- YouTube, Google Messages, X, and X Post.
 
--- Replace default bindings that we don't want (Omawrite, Agent, Hey Calendar).
+-- Replace default bindings that we don't want (Omawrite, Agent, Hey Calendar, Hey Email).
 hl.unbind("SUPER + SHIFT + C")
 hl.unbind("SUPER + SHIFT + CTRL + C")
 hl.unbind("SUPER + CTRL + ALT + D")
 hl.unbind("SUPER + SHIFT + ALT + A")
 hl.unbind("SUPER + SHIFT + G")
+hl.unbind("SUPER + SHIFT + E")
+hl.unbind("SUPER + SHIFT + ALT + E")
 
 -- Extra application bindings.
 o.bind("SUPER + SHIFT + CTRL + B", "Browser (Work)", "uwsm-app -- google-chrome-stable --new-window")
@@ -50,6 +52,9 @@ o.bind("SUPER + SHIFT + CTRL + T", "Google Tasks",
   { webapp = "https://tasks.google.com/mobile/list/~default", focus = true })
 o.bind("SUPER + SHIFT + C", "Google Calendar", { webapp = "https://calendar.google.com" })
 o.bind("SUPER + SHIFT + CTRL + C", "Omarchy calendar", "omarchy-shell shell toggle omarchy.clock")
+o.bind("SUPER + SHIFT + E", "Gmail", { webapp = "https://mail.google.com", focus = true })
+o.bind("SUPER + SHIFT + ALT + E", "Gmail compose",
+  { webapp = "https://mail.google.com/mail/u/0/#inbox?compose=new" })
 
 hl.unbind("PRINT")
 hl.unbind("F12")

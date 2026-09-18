@@ -44,3 +44,7 @@ o.window({ class = "^(.*jetbrains.*)$", title = "^\\s$" }, { no_focus = true })
 
 -- Float the Google Tasks webapp.
 o.window("brave-tasks.google.com__mobile_list_~default-Default", { float = true, center = true, size = "480 700" })
+
+-- 1Password 8.12+ uses com.onepassword.OnePassword, which Omarchy's default
+-- ^(1password|1Password)$ rule misses. Float all variants (main, Quick Access, prompts).
+o.window("^(1[pP]assword|com.onepassword.OnePassword|com.1password.1Password)$", { no_screen_share = true, tag = "+floating-window" })

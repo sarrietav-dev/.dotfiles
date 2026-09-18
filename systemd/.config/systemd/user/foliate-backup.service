@@ -1,0 +1,6 @@
+[Unit]
+Description=Backup Foliate annotations and progress
+
+[Service]
+Type=oneshot
+ExecStart=%h/bin/foliate-backup

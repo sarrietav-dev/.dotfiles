@@ -10,6 +10,7 @@ alias art='php artisan'
 alias lg='lazygit'
 alias wm='workmux'
 alias cc='claude --dangerously-skip-permissions'
+alias cx='printf "\033[2J\033[3J\033[H" && claude --permission-mode bypassPermissions'
 #
 # Use VSCode instead of neovim as your default editor
 # export EDITOR="code"

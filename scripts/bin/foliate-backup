@@ -1,0 +1,39 @@
+#!/bin/bash
+# Backup Foliate reading progress, bookmarks and annotations.
+# Source: ~/.local/share/com.github.johnfactotum.Foliate (native),
+#   Flatpak and Snap variants auto-detected.
+# Backups go to ${FOLIATE_BACKUP_DIR:-$HOME/.local/share/foliate-backups}
+# Usage: foliate-backup [--list] [--dir DIR]
+set -euo pipefail
+
+NATIVE="$HOME/.local/share/com.github.johnfactotum.Foliate"
+FLATPAK="$HOME/.var/app/com.github.johnfactotum.Foliate/data/com.github.johnfactotum.Foliate"
+SNAP="$HOME/snap/foliate/current/.local/share/com.github.johnfactotum.Foliate"
+BACKUP_DIR="${FOLIATE_BACKUP_DIR:-$HOME/.local/share/foliate-backups}"
+
+if [[ "${1:-}" == "--list" ]]; then
+  ls -lh "$BACKUP_DIR" 2>/dev/null || echo "No backups yet in $BACKUP_DIR"
+  exit 0
+fi
+if [[ "${1:-}" == "--dir" ]]; then
+  BACKUP_DIR="$2"
+fi
+
+SRC=""
+for candidate in "$NATIVE" "$FLATPAK" "$SNAP"; do
+  if [[ -d "$candidate" ]]; then
+    SRC="$candidate"
+    break
+  fi
+done
+if [[ -z "$SRC" ]]; then
+  echo "No Foliate data dir found." >&2
+  exit 1
+fi
+
+mkdir -p "$BACKUP_DIR"
+OUT="$BACKUP_DIR/foliate-backup-$(date +%F-%H%M).tar.gz"
+tar -czf "$OUT" -C "$(dirname "$SRC")" "$(basename "$SRC")"
+echo "Backed up $SRC"
+echo "  -> $OUT"
+echo "Count: $(ls "$SRC"/*.json 2>/dev/null | wc -l) book JSON files"
