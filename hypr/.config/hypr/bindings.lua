@@ -53,6 +53,7 @@ o.bind("SUPER + SHIFT + CTRL + T", "Google Tasks",
 o.bind("SUPER + SHIFT + C", "Google Calendar", { webapp = "https://calendar.google.com" })
 o.bind("SUPER + SHIFT + CTRL + C", "Omarchy calendar", "omarchy-shell shell toggle omarchy.clock")
 o.bind("SUPER + SHIFT + E", "Gmail", { webapp = "https://mail.google.com", focus = true })
+o.bind("SUPER + SHIFT + R", "Foliate", { launch = "foliate" })
 o.bind("SUPER + SHIFT + ALT + E", "Gmail compose",
   { webapp = "https://mail.google.com/mail/u/0/#inbox?compose=new" })
 
