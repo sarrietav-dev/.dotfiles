@@ -1,0 +1,114 @@
+#!/usr/bin/env python3
+"""wyoming-say: streaming Wyoming TTS client for speech-dispatcher.
+
+Reads text on stdin, synthesizes via the local warm wyoming-piper
+server (no per-chunk model reload), and plays audio as it arrives.
+Sample rate/channels are taken from the server's AudioStart event,
+so mixed-rate voices stay correct.
+
+Usage: wyoming-say [dispatcher-voice-path.onnx]
+The voice name is derived from the basename (en_US-ryan-high.onnx
+-> en_US-ryan-high). Falls back to the server default when omitted.
+"""
+import os
+import sys
+
+# The wyoming protocol library lives in the isolated venv created by
+# install_tts.sh. Re-exec under it so this file stays portable
+# (it is symlinked from the dotfiles repo and must not hardcode $HOME).
+# NOTE: compare sys.prefix (not realpath of the binary: venv binaries are
+# symlinks that resolve to the base interpreter).
+_VENV = os.path.expanduser("~/.local/share/wyoming-piper")
+_VENV_PYTHON = os.path.join(_VENV, "bin", "python")
+if os.path.isfile(_VENV_PYTHON) and sys.prefix != _VENV:
+    os.execv(_VENV_PYTHON, [_VENV_PYTHON, os.path.realpath(__file__)] + sys.argv[1:])
+
+try:
+    from wyoming.audio import AudioChunk, AudioStart, AudioStop
+    from wyoming.client import AsyncTcpClient
+    from wyoming.tts import Synthesize, SynthesizeVoice
+except ImportError:
+    print(
+        "wyoming-say: python 'wyoming' library not found; "
+        "run ~/.dotfiles/install/install_tts.sh first",
+        file=sys.stderr,
+    )
+    sys.exit(1)
+
+import asyncio
+import subprocess
+from urllib.parse import urlparse
+
+URI = os.environ.get("WYOMING_URI", "tcp://127.0.0.1:10200")
+
+
+def server_host_port():
+    parts = urlparse(URI)
+    host = parts.hostname or "127.0.0.1"
+    port = parts.port or 10200
+    return host, port
+
+
+def voice_name_from_argv() -> str | None:
+    if len(sys.argv) < 2 or not sys.argv[1] or sys.argv[1] == "no_voice":
+        return None
+    name = os.path.basename(sys.argv[1])
+    if name.endswith(".onnx"):
+        name = name[: -len(".onnx")]
+    return name or None
+
+
+async def main() -> int:
+    text = sys.stdin.read()
+    if not text.strip():
+        return 0
+
+    player = None
+    host, port = server_host_port()
+    try:
+        async with AsyncTcpClient(host, port) as client:
+            voice_name = voice_name_from_argv()
+            voice = SynthesizeVoice(name=voice_name) if voice_name else None
+            await client.write_event(Synthesize(text=text, voice=voice).event())
+            while True:
+                event = await client.read_event()
+                if event is None:
+                    break
+                if AudioStart.is_type(event.type):
+                    start = AudioStart.from_event(event)
+                    fmt = "--format=s16le" if start.width == 2 else "--format=u8"
+                    player = subprocess.Popen(
+                        [
+                            "paplay", "--raw",
+                            f"--rate={start.rate}", fmt,
+                            f"--channels={start.channels}",
+                        ],
+                        stdin=subprocess.PIPE,
+                        stdout=subprocess.DEVNULL,
+                        stderr=subprocess.DEVNULL,
+                    )
+                elif AudioChunk.is_type(event.type):
+                    if player is None or player.stdin is None:
+                        break
+                    try:
+                        player.stdin.write(AudioChunk.from_event(event).audio)
+                    except BrokenPipeError:
+                        break
+                elif AudioStop.is_type(event.type):
+                    break
+    except (ConnectionError, OSError) as err:
+        print(f"wyoming-say: cannot reach {URI}: {err}", file=sys.stderr)
+        return 1
+    finally:
+        if player is not None:
+            try:
+                if player.stdin:
+                    player.stdin.close()
+            except BrokenPipeError:
+                pass
+            player.wait()
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(asyncio.run(main()))

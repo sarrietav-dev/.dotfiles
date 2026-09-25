@@ -1,0 +1,12 @@
+#!/bin/bash
+# piper-stream: streaming Piper TTS for speech-dispatcher.
+# Reads text on stdin, plays audio as it is synthesized (no WAV buffering).
+# Usage: piper-stream /path/to/voice.onnx
+# Sample rate is read from the voice's .json so mixed-rate voices stay correct.
+MODEL="$1"
+RATE="$(jq -r '.audio.sample_rate' "$MODEL.json" 2>/dev/null)"
+case "$RATE" in
+    ''|*[!0-9]*) RATE=22050 ;;
+esac
+piper-tts -q --output_raw --model "$MODEL" 2>/dev/null \
+    | paplay --raw --rate "$RATE" --format s16le --channels 1

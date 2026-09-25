@@ -1,0 +1,12 @@
+[Unit]
+Description=Wyoming Piper TTS server (warm model for speech-dispatcher)
+After=network.target pipewire-pulse.service sound.target
+Wants=pipewire-pulse.service
+
+[Service]
+ExecStart=%h/.local/share/wyoming-piper/bin/wyoming-piper --voice en_US-lessac-medium --data-dir %h/.local/share/wyoming-piper/voices --download-dir %h/.local/share/wyoming-piper/voices --uri tcp://127.0.0.1:10200 --sentence-silence 0.2 --local-files-only
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=default.target
