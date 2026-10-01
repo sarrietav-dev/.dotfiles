@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -euo pipefail
+umask 077
+state="$HOME/.local/state/books-sync"
+mkdir -p "$state"
+exec 9>"$state/run.lock"
+flock -n 9 || { printf 'Another Books sync is running.\n' >&2; exit 1; }
+status="$(python3 "$HOME/.local/lib/books-sync/config.py" configure)"
+if [[ "$status" == authorize ]]; then
+  rclone config reconnect books-drive: --config "$HOME/.config/rclone/rclone.conf"
+else
+  printf 'Existing Google authorization preserved.\n'
+fi
+python3 "$HOME/.local/lib/books-sync/config.py" validate
+rclone lsd books-drive: --config "$HOME/.config/rclone/rclone.conf"

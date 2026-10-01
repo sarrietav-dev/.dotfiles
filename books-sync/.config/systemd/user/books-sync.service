@@ -1,0 +1,13 @@
+[Unit]
+Description=Synchronize Books with Google Drive in both directions
+ConditionPathExists=%h/.local/state/books-sync/initialized
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/books-sync run
+Environment=PATH=/usr/local/bin:/usr/bin:/bin
+TimeoutStartSec=infinity
+TimeoutStopSec=120
+KillSignal=SIGINT
+UMask=0077
+Nice=10

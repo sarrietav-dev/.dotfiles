@@ -1,0 +1,11 @@
+[Unit]
+Description=Synchronize Books with Google Drive every 15 minutes
+
+[Timer]
+OnStartupSec=2min
+OnUnitInactiveSec=15min
+AccuracySec=30s
+Unit=books-sync.service
+
+[Install]
+WantedBy=timers.target

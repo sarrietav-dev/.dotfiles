@@ -1,0 +1,2 @@
+# Remote archive is excluded from the synchronized book collection.
+- /.books-sync-backups/**

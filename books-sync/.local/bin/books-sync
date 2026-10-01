@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+set -euo pipefail
+umask 077
+
+local_books="$HOME/Documents/Books"
+remote='books-drive:'
+state="$HOME/.local/state/books-sync"
+config="$HOME/.config/rclone/rclone.conf"
+helper="$HOME/.local/lib/books-sync/config.py"
+mode="${1:-run}"
+case "$mode" in
+  preview|initialize|run) ;;
+  *) printf 'Usage: books-sync [preview|initialize|run]\n' >&2; exit 2 ;;
+esac
+[[ -d "$local_books" ]] || { printf 'Books folder is missing.\n' >&2; exit 1; }
+mkdir -p "$state" "$state/bisync"
+exec 9>"$state/run.lock"
+flock -n 9 || { printf 'Another Books sync is running.\n' >&2; exit 1; }
+python3 "$helper" validate
+stamp="$(date -u +%Y%m%dT%H%M%S)-$$"
+args=(
+  bisync "$local_books" "$remote" --config "$config"
+  --workdir "$state/bisync"
+  --filters-file "$HOME/.config/books-sync/filters.txt"
+  --create-empty-src-dirs --compare size,modtime,checksum
+  --conflict-resolve none --conflict-loser num --suffix-keep-extension
+  --backup-dir1 "$HOME/.local/share/books-sync-backups/$stamp"
+  --backup-dir2 "books-drive:.books-sync-backups/$stamp"
+  --resilient --recover --max-lock 5m --log-level INFO
+)
+case "$mode" in
+  preview)
+    if [[ -f "$state/initialized" ]]; then
+      rclone "${args[@]}" --dry-run
+    else
+      rclone "${args[@]}" --resync-mode newer --dry-run
+    fi
+    ;;
+  initialize)
+    [[ ! -e "$state/initialized" ]] || {
+      printf 'Already initialized. Use books-sync run.\n' >&2; exit 1;
+    }
+    rclone "${args[@]}" --resync-mode newer
+    rclone check "$local_books" "$remote" --config "$config" \
+      --filter-from "$HOME/.config/books-sync/filters.txt"
+    touch "$state/initialized"
+    python3 "$helper" record
+    ;;
+  run)
+    [[ -f "$state/initialized" ]] || {
+      printf 'Run the dotfiles Books sync installer to initialize the first merge.\n' >&2
+      exit 1
+    }
+    rclone "${args[@]}"
+    ;;
+esac
