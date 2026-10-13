@@ -1,0 +1,11 @@
+[Unit]
+Description=Share Pomodoro work logs between devices through Google Drive
+ConditionPathExists=%h/.local/share/omarchy-pomodoro/pomodoro.db
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/pomodoro-sync
+Environment=PATH=/usr/local/bin:/usr/bin:/bin
+TimeoutStartSec=5min
+UMask=0077
+Nice=10

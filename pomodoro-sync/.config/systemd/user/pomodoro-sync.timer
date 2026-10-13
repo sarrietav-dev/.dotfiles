@@ -1,0 +1,11 @@
+[Unit]
+Description=Share Pomodoro work logs every 15 minutes
+
+[Timer]
+OnStartupSec=3min
+OnUnitInactiveSec=15min
+AccuracySec=30s
+Unit=pomodoro-sync.service
+
+[Install]
+WantedBy=timers.target

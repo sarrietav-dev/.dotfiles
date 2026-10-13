@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+# Share Pomodoro work logs between devices through Google Drive.
+#
+# Each device only ever writes its own file (<hostname>.db), so nothing can
+# conflict: upload a snapshot of the local DB, download the other devices'
+# snapshots, and import their finished sessions into the local read-only
+# `sessions_remote` table that the plugin merges into its history.
+set -euo pipefail
+umask 077
+
+DATA="${POMODORO_DATA_DIR:-$HOME/.local/share/omarchy-pomodoro}"
+STATE="${POMODORO_STATE_DIR:-$HOME/.local/state/pomodoro-sync}"
+CONFIG="${RCLONE_CONFIG:-$HOME/.config/rclone/rclone.conf}"
+# Reuses the authorized books-drive remote, re-rooted to a folder in My Drive.
+REMOTE="${POMODORO_SYNC_REMOTE:-books-drive,root_folder_id=\"\":omarchy-pomodoro}"
+DEVICE="$(printf '%s' "${POMODORO_DEVICE:-$(hostname -s)}" | tr -c 'A-Za-z0-9._-' '_')"
+DB="$DATA/pomodoro.db"
+PEERS="$DATA/peers"
+
+REMOTE_TABLE='CREATE TABLE IF NOT EXISTS sessions_remote(device TEXT, id INTEGER, task TEXT, planned_sec INTEGER, started_at INTEGER, ended_at INTEGER, status TEXT, note TEXT, PRIMARY KEY(device, id));'
+
+mkdir -p "$STATE" "$PEERS"
+exec 9>"$STATE/run.lock"
+flock -n 9 || { printf 'Another Pomodoro sync is running.\n' >&2; exit 0; }
+[[ -f "$DB" ]] || { printf 'No Pomodoro log yet; nothing to sync.\n'; exit 0; }
+
+work="$(mktemp -d)"
+trap 'rm -rf "$work"' EXIT
+
+# 1. Snapshot the live DB without the running timer or imported rows, and
+#    upload it only when its contents changed since the last upload.
+sqlite3 "$DB" ".timeout 5000" ".backup '$work/snapshot.db'"
+sqlite3 "$work/snapshot.db" "DROP TABLE IF EXISTS sessions_remote; DELETE FROM kv; VACUUM;"
+digest="$(sqlite3 "$work/snapshot.db" .dump | sha256sum | cut -d' ' -f1)"
+if [[ ! -f "$STATE/uploaded.sha256" || "$(cat "$STATE/uploaded.sha256")" != "$digest" ]]; then
+  rclone copyto "$work/snapshot.db" "$REMOTE/$DEVICE.db" --config "$CONFIG" --log-level ERROR
+  printf '%s\n' "$digest" > "$STATE/uploaded.sha256"
+  printf 'Uploaded %s.db\n' "$DEVICE"
+else
+  printf 'Local log unchanged.\n'
+fi
+
+# 2. Pull every other device's snapshot.
+rclone copy "$REMOTE" "$PEERS" --config "$CONFIG" --log-level ERROR \
+  --filter "- $DEVICE.db" --filter "+ *.db" --filter "- *"
+
+# 3. Import finished sessions from each peer into the local DB.
+sqlite3 "$DB" ".timeout 5000" "$REMOTE_TABLE"
+shopt -s nullglob
+for peer in "$PEERS"/*.db; do
+  name="$(basename "$peer" .db)"
+  if ! sqlite3 "file:$peer?mode=ro" "SELECT 1 FROM sessions LIMIT 1" >/dev/null 2>&1; then
+    printf 'Skipping unreadable snapshot %s\n' "$name" >&2
+    continue
+  fi
+  sqlite3 "$DB" <<SQL
+.timeout 5000
+ATTACH 'file:$peer?mode=ro' AS p;
+BEGIN;
+DELETE FROM main.sessions_remote WHERE device = '$name';
+INSERT INTO main.sessions_remote
+  SELECT '$name', id, task, planned_sec, started_at, ended_at, status, note
+  FROM p.sessions WHERE ended_at IS NOT NULL;
+COMMIT;
+SQL
+  printf 'Imported %s\n' "$name"
+done

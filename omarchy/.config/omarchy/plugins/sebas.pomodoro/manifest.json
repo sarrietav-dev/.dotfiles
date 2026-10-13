@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "sebas.pomodoro",
+  "name": "Pomodoro",
+  "version": "0.1.0",
+  "author": "Sebastian",
+  "description": "Single-task pomodoro timer with optional work logs in SQLite.",
+  "kinds": ["bar-widget"],
+  "entryPoints": { "barWidget": "Panel.qml" },
+  "barWidget": {
+    "displayName": "Pomodoro",
+    "description": "Pomodoro timer with work log and parking lot.",
+    "category": "Time",
+    "allowMultiple": false,
+    "defaultSection": "right",
+    "defaults": {
+      "focusMinutes": 25,
+      "breakMinutes": 5,
+      "requireTask": true,
+      "askLog": true
+    },
+    "schema": [
+      { "key": "focusMinutes", "type": "number", "label": "Focus (min)" },
+      { "key": "breakMinutes", "type": "number", "label": "Rest (min)" },
+      { "key": "requireTask", "type": "boolean", "label": "Require a task to start" },
+      { "key": "askLog", "type": "boolean", "label": "Ask what you did after each session" }
+    ]
+  }
+}

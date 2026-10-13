@@ -12,6 +12,7 @@ Stowed config for the Omarchy shell and user customizations (`~/.config/omarchy/
 - `branding/` - custom about/screensaver ASCII art
 - `plugins/sarrietav-dev.omassistant/` - custom voice assistant plugin (no upstream)
 - `plugins/sebas.bible/` - git submodule
+- `plugins/sebas.pomodoro/` - Pomodoro widget; installed and synced across devices by `install/install_pomodoro_sync.sh` (see `pomodoro-sync/`)
 
 ## Not tracked (recreate after a fresh install)
 
