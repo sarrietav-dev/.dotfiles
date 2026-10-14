@@ -1,26 +1,19 @@
 #!/usr/bin/env bash
 # Omaread: keyboard-first EPUB reader (Rust + GTK4 / libadwaita + WebKitGTK).
 # Idempotent standalone installer; also discovered by install/install.sh.
+# Installs the prebuilt omaread-bin from the AUR. SUPER+SHIFT+R opens it (see
+# hypr/.config/hypr/bindings.lua).
 set -euo pipefail
 
-SRC="${OMAREAD_SRC:-$HOME/Work/omaread}"
-REPO="${OMAREAD_REPO:-git@github.com:sarrietav-dev/omaread.git}"
+# Drop a copy built from source by bin/omaread-install: it sits earlier on
+# PATH than /usr/bin, and its desktop file shadows the package's.
+APP_ID=io.github.sarrietav_dev.Omaread
+DATA="${XDG_DATA_HOME:-$HOME/.local/share}"
+local_copy=("$HOME/.local/bin/omaread" "$DATA/applications/$APP_ID.desktop"
+  "$DATA/icons/hicolor/scalable/apps/$APP_ID.svg")
+for f in "${local_copy[@]}"; do
+  [[ -e "$f" ]] && rm -f "$f" && echo "omaread: removed local install $f"
+done
+update-desktop-database "$DATA/applications" 2>/dev/null || true
 
-# GTK4, libadwaita and WebKitGTK to link against, plus a Rust toolchain.
-omarchy pkg add gtk4 libadwaita webkitgtk-6.0
-command -v cargo >/dev/null || omarchy install dev-env rust
-
-# Source checkout: clone once, fast-forward on later runs. A dirty or offline
-# checkout is kept rather than failing the install.
-if [[ -d "$SRC/.git" ]]; then
-  git -C "$SRC" pull --ff-only || echo "omaread: keeping the existing checkout (pull failed)"
-elif [[ -e "$SRC" ]]; then
-  echo "omaread: $SRC exists but is not a git checkout; building it as-is"
-else
-  mkdir -p "$(dirname "$SRC")"
-  git clone "$REPO" "$SRC"
-fi
-
-# Build the release binary, then install it to ~/.local with its desktop file
-# and icon. SUPER+SHIFT+R opens it (see hypr/.config/hypr/bindings.lua).
-"$SRC/bin/omaread-install"
+omarchy pkg aur add omaread-bin
