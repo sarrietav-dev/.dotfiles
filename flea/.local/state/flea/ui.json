@@ -22,7 +22,10 @@
     }
   },
   "dual": {
-    "paths": [],
+    "paths": [
+      "/home/sebas/Work",
+      "/home/sebas/Work"
+    ],
     "focus": 0
   },
   "foldersFirst": true,
@@ -37,10 +40,10 @@
   "keyHints": false,
   "startIn": "home",
   "startFolder": "",
-  "lastPath": "/home/sebas/Pictures",
+  "lastPath": "/home/sebas/Documents/Books/Teaching",
   "lastTabs": {
     "paths": [
-      "/home/sebas/Pictures"
+      "/home/sebas/Documents/Books/Teaching"
     ],
     "index": 0
   },
