@@ -17,6 +17,10 @@
   "rememberSort": true,
   "folderSorts": {
     "/home/sebas": {
+      "key": "kind",
+      "reverse": false
+    },
+    "/home/sebas/Documents/Books": {
       "key": "date",
       "reverse": false
     }
@@ -40,10 +44,10 @@
   "keyHints": false,
   "startIn": "home",
   "startFolder": "",
-  "lastPath": "/home/sebas/Documents/Books/Teaching",
+  "lastPath": "/home/sebas/Documents/Books/Business",
   "lastTabs": {
     "paths": [
-      "/home/sebas/Documents/Books/Teaching"
+      "/home/sebas/Documents/Books/Business"
     ],
     "index": 0
   },
