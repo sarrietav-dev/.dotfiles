@@ -42,6 +42,12 @@ hl.unbind("SUPER + SHIFT + G")
 hl.unbind("SUPER + SHIFT + E")
 hl.unbind("SUPER + SHIFT + ALT + E")
 
+-- Music apps. Omarchy's default binds SUPER + SHIFT + M to Spotify, so unbind
+-- it first, then give the key to spotifast and move Spotify to a free combo.
+hl.unbind("SUPER + SHIFT + M")
+o.bind("SUPER + SHIFT + M", "Spotifast", { launch = "spotifast", focus = "spotifast" })
+o.bind("SUPER + CTRL + SHIFT + M", "Music (Spotify)", { omarchy = "spotify" })
+
 -- Extra application bindings.
 o.bind("SUPER + SHIFT + CTRL + B", "Browser (Work)", "uwsm-app -- google-chrome-stable --new-window")
 o.bind("SUPER + SHIFT + T", "Activity", { tui = "btop" })

@@ -5,7 +5,7 @@ set -euo pipefail
 # Does NOT assume gh auth, git remote, or that repo exists
 # Safe to run multiple times (idempotent)
 
-SITE_REPO="${1:-$HOME/Work/site}"
+SITE_REPO="${1:-$HOME/Projects/site}"
 BLOG_DIR="$HOME/Documents/Writing/blog"
 SYSTEMD_USER_DIR="$HOME/.config/systemd/user"
 

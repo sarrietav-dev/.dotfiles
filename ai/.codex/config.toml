@@ -14,10 +14,10 @@ command = "railway"
 [projects."/home/sebas"]
 trust_level = "trusted"
 
-[projects."/home/sebas/Work/catastro"]
+[projects."/home/sebas/Projects/catastro"]
 trust_level = "trusted"
 
-[projects."/home/sebas/Work/vera"]
+[projects."/home/sebas/Projects/vera"]
 trust_level = "trusted"
 
 [tui.model_availability_nux]

@@ -2,6 +2,16 @@
 # (don't mess with these directly, just overwrite them here!)
 source "${OMARCHY_PATH:-/usr/share/omarchy}/default/bash/rc"
 
+# try: ephemeral workspaces live in ~/Projects/tries and graduate into ~/Projects.
+# This overrides Omarchy's default, which points at the old ~/Work/tries.
+export TRY_PATH="$HOME/Projects/tries"
+export TRY_PROJECTS="$HOME/Projects"
+try() {
+  unset -f try
+  eval "$(SHELL=/bin/bash command try init "$TRY_PATH")"
+  try "$@"
+}
+
 # Add your own exports, aliases, and functions here.
 #
 # Make an alias for invoking commands you use constantly
@@ -66,3 +76,12 @@ fi
 export PATH="$HOME/.config/composer/vendor/bin:$PATH"
 
 eval "$(mise activate bash)"
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/home/sebas/.lmstudio/bin"
+# End of LM Studio CLI section
+
+
+# Added by flyctl installer
+export FLYCTL_INSTALL="/home/sebas/.fly"
+export PATH="$FLYCTL_INSTALL/bin:$PATH"
