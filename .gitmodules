@@ -1,3 +1,6 @@
 [submodule "omarchy/.config/omarchy/plugins/sebas.bible"]
 	path = omarchy/.config/omarchy/plugins/sebas.bible
 	url = git@github.com:sarrietav-dev/omarchy-bible.git
+[submodule "omarchy/.config/omarchy/plugins/sebas.notifications"]
+	path = omarchy/.config/omarchy/plugins/sebas.notifications
+	url = git@github.com:sarrietav-dev/omarchy-notifications.git

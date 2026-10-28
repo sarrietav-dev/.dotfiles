@@ -78,6 +78,9 @@
           "id": "omarchy.monitor"
         },
         {
+          "id": "sebas.notifications"
+        },
+        {
           "id": "omarchy.power"
         }
       ]
@@ -93,12 +96,17 @@
     {
       "id": "io.github.sirjul1337.lock-explorer",
       "design": "ring"
+    },
+    {
+      "id": "sebas.notifications"
     }
   ],
   "disabledPlugins": [
-    "omarchy.lock"
+    "omarchy.lock",
+    "omarchy.notifications"
   ],
   "cloneSourceRestores": [
-    "io.github.sirjul1337.lock-explorer"
+    "io.github.sirjul1337.lock-explorer",
+    "sebas.notifications"
   ]
 }

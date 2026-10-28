@@ -88,3 +88,7 @@ o.bind("SUPER + ALT + SHIFT + F", "File manager (cwd)", { launch = 'flea --gui "
 -- flea --picker: begin. Written by `flea --picker`; `flea --picker off` removes the block whole.
 o.window("com.thisisgm.flea.picker", { tag = "+floating-window" })
 -- flea --picker: end.
+
+-- Personal notification center (SUPER+CTRL+N remains Night Light).
+o.bind("SUPER + N", "Notification Center", "omarchy-shell notifications toggleCenter")
+o.bind("SUPER + ALT + N", "Toggle notification Focus", "omarchy-shell notifications toggleDnd")
