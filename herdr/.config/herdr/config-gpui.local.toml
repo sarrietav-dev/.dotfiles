@@ -1,0 +1,12 @@
+# Herdr UI overrides. Saved changes reload automatically.
+# Unset keys inherit config-gpui.toml; tables merge key by key.
+
+# New installs start with the roomy rounded sidebar. Remove this line for
+# the managed default, or pick another layout listed in config-gpui.toml.
+layout = "comfortable-rounded"
+
+# Keep the GUI from re-installing its managed agent skills (herdr-automations,
+# herdr-gpui-browser). The plain "herdr" skill is installed by hand in
+# ~/.agents/skills/herdr and symlinked into each agent's skills directory.
+[agent_skill]
+install = "off"

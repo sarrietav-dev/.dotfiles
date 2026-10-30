@@ -1,0 +1,13 @@
+{
+  "zoom": 1,
+  "sounds": {
+    "enabled": true
+  },
+  "minimum_contrast": 1,
+  "theme": "terminal",
+  "appearance": "dark",
+  "colors": {
+    "accent": "#7daea3"
+  },
+  "font": "CaskaydiaCove Nerd Font"
+}
