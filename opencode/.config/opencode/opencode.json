@@ -1,0 +1,73 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "autoupdate": false,
+  "experimental": {
+    "artifacts": true,
+    "todo": true
+  },
+  "mcp": {
+    "railway": {
+      "command": [
+        "railway",
+        "mcp",
+        "proxy"
+      ],
+      "enabled": true,
+      "type": "local"
+    },
+    "cloudflare": {
+      "type": "remote",
+      "url": "https://mcp.cloudflare.com/mcp",
+      "enabled": true,
+      "oauth": {}
+    },
+    "cloudflare-docs": {
+      "type": "remote",
+      "url": "https://docs.mcp.cloudflare.com/mcp",
+      "enabled": true
+    },
+    "cloudflare-bindings": {
+      "type": "remote",
+      "url": "https://bindings.mcp.cloudflare.com/mcp",
+      "enabled": true,
+      "oauth": {}
+    },
+    "cloudflare-builds": {
+      "type": "remote",
+      "url": "https://builds.mcp.cloudflare.com/mcp",
+      "enabled": true,
+      "oauth": {}
+    },
+    "cloudflare-observability": {
+      "type": "remote",
+      "url": "https://observability.mcp.cloudflare.com/mcp",
+      "enabled": true,
+      "oauth": {}
+    },
+    "timetracker": {
+      "type": "remote",
+      "url": "https://mantis.qarden.io/mcp/timetracker",
+      "enabled": true
+    },
+    "aws-mcp": {
+      "type": "local",
+      "command": [
+        "uvx",
+        "mcp-proxy-for-aws@latest",
+        "https://aws-mcp.us-east-1.api.aws/mcp",
+        "--metadata",
+        "INSTALL_SOURCE=aws-cli"
+      ],
+      "environment": {
+        "AWS_MCP_PROXY_PROFILES": "personal"
+      }
+    },
+    "mailgun": {
+      "type": "local",
+      "command": [
+        "/home/sebas/.local/bin/mailgun-mcp"
+      ],
+      "enabled": true
+    }
+  }
+}
