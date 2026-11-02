@@ -63,27 +63,6 @@ Item {
     function ping(): string { return "ok" }
   }
 
-  Process {
-    id: audioBridge
-    command: ["voxtype-audio-bridge"]
-    running: root.phase === "listening"
-    stdout: SplitParser {
-      splitMarker: "\n"
-      onRead: function(line) {
-        try {
-          var frame = JSON.parse(String(line).trim())
-          if (typeof frame.peak !== "number") return
-          root.audioPeak = frame.peak
-          var next = root.waveform.slice()
-          next.push(Math.min(1, frame.peak * 7))
-          while (next.length > 32) next.shift()
-          root.waveform = next
-          wave.requestPaint()
-        } catch (e) {}
-      }
-    }
-  }
-
   Timer {
     interval: 150
     running: root.opened
@@ -206,7 +185,9 @@ Item {
             var gap = 3
             var barWidth = (width - gap * (count - 1)) / count
             for (var i = 0; i < count; i++) {
-              var value = i < bars.length ? bars[i] : 0.05
+              var value = i < bars.length ? bars[i]
+                : root.phase === "listening" ? 0.08 + 0.1 * Math.abs(Math.sin((i + root.animationFrame) * 0.5))
+                : 0.05
               if (root.phase !== "listening")
                 value = 0.12 + 0.1 * Math.abs(Math.sin((i + root.animationFrame) * 0.45))
               var h = Math.max(2, value * height)

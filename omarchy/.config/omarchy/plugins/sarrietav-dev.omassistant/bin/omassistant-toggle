@@ -129,7 +129,7 @@ process_request() {
   done
 
   if [[ ! -s $prompt_file ]]; then
-    fail "Voxtype did not return a transcript."
+    fail "Hex did not return a transcript."
     exit 1
   fi
 
@@ -192,7 +192,7 @@ process_request() {
 }
 
 cancel_current() {
-  voxtype record cancel >/dev/null 2>&1 || true
+  hex dictation cancel >/dev/null 2>&1 || true
   if [[ -f $worker_file ]]; then
     read -r worker_pid <"$worker_file"
     if [[ $worker_pid =~ ^[0-9]+$ ]]; then
@@ -217,18 +217,18 @@ case "$current_state" in
     if ! omarchy-shell sarrietav-dev.omassistant ping >/dev/null 2>&1; then
       omarchy-shell shell summon sarrietav-dev.omassistant '{}' >/dev/null 2>&1 || exit 1
     fi
-    if voxtype record start --file="$prompt_file" >/dev/null 2>&1; then
+    if hex dictation start >/dev/null 2>&1; then
       write_state listening
       send_ui listening
     else
-      fail "Voxtype could not start recording."
+      fail "Hex could not start recording."
     fi
     ;;
   listening)
     write_state transcribing
     send_ui transcribing
-    if ! voxtype record stop >/dev/null 2>&1; then
-      fail "Voxtype could not stop recording."
+    if ! hex dictation stop --print >"$prompt_file" 2>"$runtime_dir/hex-error.log"; then
+      fail "Hex could not transcribe."
       exit 1
     fi
     setsid "$script_path" process >>"$log_file" 2>&1 &

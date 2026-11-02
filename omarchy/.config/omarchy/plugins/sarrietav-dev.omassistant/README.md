@@ -7,7 +7,7 @@ handles the request and Piper speaks its answer.
 
 ## Features
 
-- Local speech-to-text through Voxtype.
+- Local speech-to-text through Hex.
 - Uses the agent selected by `omarchy-default-agent`; it is not tied to one AI
   provider or CLI.
 - Supports OpenCode, Claude Code, Codex, Gemini, Copilot, Crush, Grok, Oh My
@@ -33,7 +33,7 @@ before enabling third-party installations.
 ## Requirements
 
 - A current Omarchy installation with `omarchy-shell` plugin support.
-- Voxtype configured and running as a user service.
+- Hex installed and running as a user service (`hex.service`).
 - An Omarchy default agent selected with `omarchy default agent <name>`.
 - `uv`, `ffmpeg`, `jq`, and PipeWire's `pw-play`.
 
@@ -59,18 +59,6 @@ Then validate Hyprland:
 ```bash
 hyprctl reload
 hyprctl configerrors
-```
-
-If Voxtype's own waveform appears alongside Omassistant, add this to
-`~/.config/voxtype/config.toml` and restart Voxtype:
-
-```toml
-[osd]
-enabled = false
-```
-
-```bash
-systemctl --user restart voxtype.service
 ```
 
 ## Usage
