@@ -25,7 +25,7 @@
 
 -- Logitech MX Keys examples:
 -- o.bind("SUPER + SHIFT + S", nil, "omarchy-capture-screenshot")
--- o.bind("SUPER + H", nil, "voxtype record toggle")
+-- o.bind("SUPER + H", nil, "hex dictation toggle")
 -- o.bind("SUPER + PERIOD", nil, "omarchy-shell shell toggle omarchy.emojis")
 
 -- Personal overrides from the old bindings.conf.
@@ -72,13 +72,13 @@ o.bind("F12", "Screenshot", "omasnap")
 o.bind("ALT + SHIFT + 4", "Screenshot", "omasnap")
 o.bind("F10", "Voice assistant", "~/.config/omarchy/plugins/sarrietav-dev.omassistant/bin/omassistant-toggle")
 
--- Dictation (Hex). Voxtype stays installed but disabled; switch back later with
--- `omarchy-dictation-use voxtype`. The stock voxtype bindings are replaced.
+-- Dictation (Hex). Replaces Voxtype; the stock voxtype bindings are unbound.
+-- Hex talks to its running daemon (`hex.service`), so these are plain commands.
 hl.unbind("F9")
 hl.unbind("SUPER + CTRL + X")
-o.bind("SUPER + CTRL + X", "Toggle dictation", "omarchy-dictation toggle")
-o.bind("F9", "Start dictation (push-to-talk)", "omarchy-dictation start")
-o.bind("F9", "Stop dictation (push-to-talk)", "omarchy-dictation stop", { release = true })
+o.bind("SUPER + CTRL + X", "Toggle dictation", "hex dictation toggle")
+o.bind("F9", "Start dictation (push-to-talk)", "hex dictation start")
+o.bind("F9", "Stop dictation (push-to-talk)", "hex dictation stop", { release = true })
 
 hl.layer_rule({
   match = { namespace = "^omasnap$" },

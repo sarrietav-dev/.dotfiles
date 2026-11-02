@@ -5,7 +5,8 @@ DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # NOTE: flea is not stowed in full: its UI state ($XDG_STATE_HOME/flea/ui.json)
 # is machine runtime state, and flea refuses to write through a symlink.
-CONFIG_DIRS=(ai bash fonts git ghostty herdr hypr kitty nvim omarchy opencode zellij scripts systemd tts)
+# NOTE: ai/.codex is intentionally untracked (local Codex state); do not stow it.
+CONFIG_DIRS=(bash fonts git ghostty herdr hypr kitty nvim omarchy opencode zellij scripts systemd tts)
 
 SKIP_PACKAGES=false
 for arg in "$@"; do

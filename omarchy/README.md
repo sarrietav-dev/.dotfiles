@@ -7,7 +7,7 @@ Stowed config for the Omarchy shell and user customizations (`~/.config/omarchy/
 - `shell.json` - bar layout, plugins, idle settings
 - `shell.toml` - font settings
 - `defaults/agent` - default agent (opencode)
-- `hooks/` - theme-set omazed hook, post-update hooks (voxtype, agent, fingerprint), theme-set.d `30-hunk-theme`, and the `.d` dirs (via `.gitkeep`)
+- `hooks/` - theme-set omazed hook, post-update hooks (agent, fingerprint), theme-set.d `30-hunk-theme`, and the `.d` dirs (via `.gitkeep`)
 - `lock-designs/Ring.qml` - customized Ring lock design
 - `branding/` - custom about/screensaver ASCII art
 - `plugins/sarrietav-dev.omassistant/` - custom voice assistant plugin (no upstream)
