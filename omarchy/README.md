@@ -10,10 +10,12 @@ Stowed config for the Omarchy shell and user customizations (`~/.config/omarchy/
 - `hooks/` - theme-set omazed hook, post-update hooks (agent, fingerprint), theme-set.d `30-hunk-theme`, and the `.d` dirs (via `.gitkeep`)
 - `lock-designs/Ring.qml` - customized Ring lock design
 - `branding/` - custom about/screensaver ASCII art
-- `plugins/sarrietav-dev.omassistant/` - custom voice assistant plugin (no upstream)
 - `plugins/sebas.bible/` - git submodule
 - `plugins/sebas.notifications/` - [Notification Center](https://github.com/sarrietav-dev/omarchy-notifications), git submodule; grouped toasts, theme-native history, Focus, Gmail-style snooze and custom date/time picker
 - `plugins/sebas.pomodoro/` - Pomodoro widget; installed and synced across devices by `install/install_pomodoro_sync.sh` (see `pomodoro-sync/`)
+
+Optional, not stowed by default: `optional/omassistant/` is a voice assistant
+plugin. Enable it with `install/optional/install_omassistant.sh`.
 
 Initialize plugin submodules after cloning these dotfiles:
 

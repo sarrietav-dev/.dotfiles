@@ -70,7 +70,11 @@ hl.unbind("ALT + SHIFT + 4")
 o.bind("PRINT", "Screenshot", "omasnap")
 o.bind("F12", "Screenshot", "omasnap")
 o.bind("ALT + SHIFT + 4", "Screenshot", "omasnap")
-o.bind("F10", "Voice assistant", "~/.config/omarchy/plugins/sarrietav-dev.omassistant/bin/omassistant-toggle")
+
+-- Voice assistant (optional). Install it with
+-- install/optional/install_omassistant.sh, then add:
+--   o.bind("F10", "Voice assistant",
+--     "~/.config/omarchy/plugins/sarrietav-dev.omassistant/bin/omassistant-toggle")
 
 -- Dictation (Hex). Replaces Voxtype; the stock voxtype bindings are unbound.
 -- Hex talks to its running daemon (`hex.service`), so these are plain commands.

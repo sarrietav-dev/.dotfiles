@@ -39,6 +39,11 @@ before enabling third-party installations.
 
 ## Install
 
+> Vendored in these dotfiles under `optional/omassistant/` and not stowed by
+> default. From the dotfiles repo run
+> `install/optional/install_omassistant.sh`, then enable the plugin id and
+> binding it prints.
+
 ```bash
 omarchy plugin add https://github.com/sarrietav-dev/omassistant.git --enable --yes
 ~/.config/omarchy/plugins/sarrietav-dev.omassistant/bin/omassistant-setup
