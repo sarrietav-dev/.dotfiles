@@ -72,6 +72,14 @@ o.bind("F12", "Screenshot", "omasnap")
 o.bind("ALT + SHIFT + 4", "Screenshot", "omasnap")
 o.bind("F10", "Voice assistant", "~/.config/omarchy/plugins/sarrietav-dev.omassistant/bin/omassistant-toggle")
 
+-- Dictation (Hex). Voxtype stays installed but disabled; switch back later with
+-- `omarchy-dictation-use voxtype`. The stock voxtype bindings are replaced.
+hl.unbind("F9")
+hl.unbind("SUPER + CTRL + X")
+o.bind("SUPER + CTRL + X", "Toggle dictation", "omarchy-dictation toggle")
+o.bind("F9", "Start dictation (push-to-talk)", "omarchy-dictation start")
+o.bind("F9", "Stop dictation (push-to-talk)", "omarchy-dictation stop", { release = true })
+
 hl.layer_rule({
   match = { namespace = "^omasnap$" },
   no_anim = true,
