@@ -33,10 +33,19 @@ o.window({ class = "^jetbrains-.*$", float = true, title = "^$|^\\s$|^win\\d+$" 
 o.window({ class = "^jetbrains-.+$", float = true }, { tag = "+jb" })
 o.window({ tag = "jb" }, { stay_focused = true })
 o.window({ tag = "jb" }, { no_initial_focus = true })
-o.window({ class = "^jetbrains-(?!toolbox)" }, { focus_on_activate = true })
 
--- Center JetBrains popups except the context menu.
-o.window({ class = "^jetbrains-(?!toolbox)", title = "^(?!win.*)", float = true }, { move = "30% 30%", size = "40% 40%" })
+-- Hyprland matches rules with RE2, which has no lookahead (`(?!...)`), so this
+-- used to spam "Invalid RE2: invalid perl operator". Use the `negative:` prefix
+-- to exclude a match instead.
+-- Toolbox is left out of the rules below: Omarchy already sets
+-- misc:focus_on_activate = true globally, and the Toolbox main window is never
+-- floating, so the centering rule can only hit its dialogs (which should be
+-- centered anyway).
+o.window({ class = "^jetbrains-.+$" }, { focus_on_activate = true })
+
+-- Center JetBrains popups except the context menu / tab-drag preview windows
+-- (those have titles starting with "win").
+o.window({ class = "^jetbrains-.+$", title = "negative:^win", float = true }, { move = "30% 30%", size = "40% 40%" })
 
 -- Tab dragging (single space title).
 o.window({ class = "^(.*jetbrains.*)$", title = "^\\s$" }, { no_initial_focus = true })
