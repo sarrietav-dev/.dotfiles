@@ -38,3 +38,9 @@
 	cmd = hunk difftool \"$LOCAL\" \"$REMOTE\" \"$MERGED\"
 [difftool]
 	prompt = false
+[credential "https://github.com"]
+	helper = 
+	helper = !/home/sebas/.local/share/mise/installs/gh/2.103.3/gh_2.103.3_linux_amd64/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/home/sebas/.local/share/mise/installs/gh/2.103.3/gh_2.103.3_linux_amd64/bin/gh auth git-credential

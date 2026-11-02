@@ -49,5 +49,13 @@ o.window("brave-tasks.google.com__mobile_list_~default-Default", { float = true,
 -- ^(1password|1Password)$ rule misses. Float all variants (main, Quick Access, prompts).
 o.window("^(1[pP]assword|com.onepassword.OnePassword|com.1password.1Password)$", { no_screen_share = true, tag = "+floating-window" })
 
+-- Playwright CLI (agent browser automation): never steal focus / switch workspace.
+-- Playwright calls Page.bringToFront() on actions and opens new windows for tabs;
+-- Omarchy's defaults set misc:focus_on_activate = true, so Hyprland obeys those
+-- activation requests and yanks you to the browser's workspace.
+-- suppress_event activatefocus = ignore activation requests for this window only.
+-- no_initial_focus = don't grab focus when the browser window first opens.
+o.window({ class = "^playwright-cli$" }, { suppress_event = "activatefocus", no_initial_focus = true })
+
 -- oma-cast launcher bindings
 pcall(require, "hypr.oma-cast")
