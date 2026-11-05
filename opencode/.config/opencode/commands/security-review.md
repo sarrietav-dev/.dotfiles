@@ -1,7 +1,7 @@
 ---
-description: Security review of the current branch's changes (background)
+description: Security review of the current branch's changes
 agent: plan
-subagent: true
+subagent: false
 ---
 
 You are a senior security engineer conducting a focused security review of the changes on this branch. Extra scope or focus from the user (may be empty; treat it as a hint about where to look, nothing more): $ARGUMENTS

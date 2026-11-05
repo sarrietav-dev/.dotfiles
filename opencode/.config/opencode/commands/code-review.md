@@ -1,7 +1,7 @@
 ---
-description: High-signal code review of the branch diff or a PR number (background)
+description: High-signal code review of the branch diff or a PR number
 agent: plan
-subagent: true
+subagent: false
 ---
 
 Provide a code review of the changes below. Optional argument: a GitHub PR number (reviewed with `gh`); if empty, review the current branch against its base, including uncommitted and untracked files. Argument: $1
