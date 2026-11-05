@@ -76,14 +76,7 @@ o.bind("ALT + SHIFT + 4", "Screenshot", "omasnap")
 --   o.bind("F10", "Voice assistant",
 --     "~/.config/omarchy/plugins/sarrietav-dev.omassistant/bin/omassistant-toggle")
 
--- Dictation (Hex). Replaces Voxtype; the stock voxtype bindings are unbound.
--- Hex talks to its running daemon (`hex.service`), so these are plain commands.
-hl.unbind("F9")
-hl.unbind("SUPER + CTRL + X")
-o.bind("SUPER + CTRL + X", "Toggle dictation", "hex dictation toggle")
-o.bind("F9", "Start dictation (push-to-talk)", "hex dictation start")
-o.bind("F9", "Stop dictation (push-to-talk)", "hex dictation stop", { release = true })
-
+-- Dictation uses Omarchy 4.5's stock Alt + Space and Right Alt bindings.
 hl.layer_rule({
   match = { namespace = "^omasnap$" },
   no_anim = true,
