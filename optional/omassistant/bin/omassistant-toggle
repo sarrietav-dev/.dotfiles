@@ -129,7 +129,7 @@ process_request() {
   done
 
   if [[ ! -s $prompt_file ]]; then
-    fail "Hex did not return a transcript."
+    fail "Superwhisper did not return a transcript."
     exit 1
   fi
 
@@ -192,7 +192,7 @@ process_request() {
 }
 
 cancel_current() {
-  hex dictation cancel >/dev/null 2>&1 || true
+  superwhisper cancel >/dev/null 2>&1 || true
   if [[ -f $worker_file ]]; then
     read -r worker_pid <"$worker_file"
     if [[ $worker_pid =~ ^[0-9]+$ ]]; then
@@ -217,18 +217,32 @@ case "$current_state" in
     if ! omarchy-shell sarrietav-dev.omassistant ping >/dev/null 2>&1; then
       omarchy-shell shell summon sarrietav-dev.omassistant '{}' >/dev/null 2>&1 || exit 1
     fi
-    if hex dictation start >/dev/null 2>&1; then
+    superwhisper status 2>/dev/null | jq -r '.session_id // 0' >"$runtime_dir/session_id"
+    if superwhisper start >/dev/null 2>&1; then
       write_state listening
       send_ui listening
     else
-      fail "Hex could not start recording."
+      fail "Superwhisper could not start recording."
     fi
     ;;
   listening)
     write_state transcribing
     send_ui transcribing
-    if ! hex dictation stop --print >"$prompt_file" 2>"$runtime_dir/hex-error.log"; then
-      fail "Hex could not transcribe."
+    previous_session=$(cat "$runtime_dir/session_id" 2>/dev/null || echo 0)
+    superwhisper stop >/dev/null 2>&1 || true
+    text=""
+    for _ in $(seq 1 300); do
+      last_dictation=$(superwhisper read 2>/dev/null || true)
+      session_id=$(jq -r '.session_id // 0' <<<"$last_dictation" 2>/dev/null || echo 0)
+      if [[ -n $session_id && $session_id != "null" && $session_id != "$previous_session" ]]; then
+        text=$(jq -r '.text // ""' <<<"$last_dictation" 2>/dev/null || true)
+        break
+      fi
+      sleep 0.1
+    done
+    printf '%s\n' "$text" >"$prompt_file"
+    if [[ -z $text ]]; then
+      fail "Superwhisper could not transcribe."
       exit 1
     fi
     setsid "$script_path" process >>"$log_file" 2>&1 &

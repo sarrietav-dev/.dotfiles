@@ -25,7 +25,6 @@
 
 -- Logitech MX Keys examples:
 -- o.bind("SUPER + SHIFT + S", nil, "omarchy-capture-screenshot")
--- o.bind("SUPER + H", nil, "hex dictation toggle")
 -- o.bind("SUPER + PERIOD", nil, "omarchy-shell shell toggle omarchy.emojis")
 
 -- Personal overrides from the old bindings.conf.
@@ -63,25 +62,12 @@ o.bind("SUPER + SHIFT + R", "Omaread", { launch = "omaread" })
 o.bind("SUPER + SHIFT + ALT + E", "Gmail compose",
   { webapp = "https://mail.google.com/mail/u/0/#inbox?compose=new" })
 
-hl.unbind("PRINT")
-hl.unbind("F12")
-hl.unbind("ALT + SHIFT + 4")
-
-o.bind("PRINT", "Screenshot", "omasnap")
-o.bind("F12", "Screenshot", "omasnap")
-o.bind("ALT + SHIFT + 4", "Screenshot", "omasnap")
-
 -- Voice assistant (optional). Install it with
 -- install/optional/install_omassistant.sh, then add:
 --   o.bind("F10", "Voice assistant",
 --     "~/.config/omarchy/plugins/sarrietav-dev.omassistant/bin/omassistant-toggle")
 
 -- Dictation uses Omarchy 4.5's stock Alt + Space and Right Alt bindings.
-hl.layer_rule({
-  match = { namespace = "^omasnap$" },
-  no_anim = true,
-  animation = "none",
-})
 
 -- flea --default: begin. Written by `flea --default`; `flea --default off` removes the block whole.
 hl.unbind("SUPER + SHIFT + F")
@@ -94,6 +80,6 @@ o.bind("SUPER + ALT + SHIFT + F", "File manager (cwd)", { launch = 'flea --gui "
 o.window("com.thisisgm.flea.picker", { tag = "+floating-window" })
 -- flea --picker: end.
 
--- Personal notification center (SUPER+CTRL+N remains Night Light).
-o.bind("SUPER + N", "Notification Center", "omarchy-shell notifications toggleCenter")
+-- Personal notification shortcuts (SUPER+CTRL+N remains Night Light).
+o.bind("SUPER + N", "Notification history", "omarchy-shell notifications showHistory")
 o.bind("SUPER + ALT + N", "Toggle notification Focus", "omarchy-shell notifications toggleDnd")

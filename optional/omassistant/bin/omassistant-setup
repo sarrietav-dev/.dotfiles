@@ -7,7 +7,7 @@ piper_home="$data_home/piper"
 voice_dir="$piper_home/voices"
 
 missing=()
-for command in uv ffmpeg jq pw-play hex omarchy-shell; do
+for command in uv ffmpeg jq pw-play superwhisper omarchy-shell; do
   command -v "$command" >/dev/null 2>&1 || missing+=("$command")
 done
 

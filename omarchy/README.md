@@ -7,11 +7,11 @@ Stowed config for the Omarchy shell and user customizations (`~/.config/omarchy/
 - `shell.json` - bar layout, plugins, idle settings
 - `shell.toml` - font settings
 - `defaults/agent` - default agent (opencode)
+- `defaults/dictation` - dictation backend (superwhisper)
 - `hooks/` - theme-set omazed hook, post-update hooks (agent, fingerprint), theme-set.d `30-hunk-theme`, and the `.d` dirs (via `.gitkeep`)
 - `lock-designs/Ring.qml` - customized Ring lock design
 - `branding/` - custom about/screensaver ASCII art
 - `plugins/sebas.bible/` - git submodule
-- `plugins/sebas.notifications/` - [Notification Center](https://github.com/sarrietav-dev/omarchy-notifications), git submodule; grouped toasts, theme-native history, Focus, Gmail-style snooze and custom date/time picker
 - `plugins/sebas.pomodoro/` - Pomodoro widget; installed and synced across devices by `install/install_pomodoro_sync.sh` (see `pomodoro-sync/`)
 
 Optional, not stowed by default: `optional/omassistant/` is a voice assistant
@@ -23,11 +23,11 @@ Initialize plugin submodules after cloning these dotfiles:
 git submodule update --init --recursive
 ```
 
-Notification Center is enabled in `shell.json` in place of the stock notification
-service; `Super+N` opens the center and `Super+Alt+N` toggles Focus. Restart the
-shell after installing/updating it: `omarchy restart shell`.
-Notification preferences and all notification/history/snooze state are generated
-locally by the plugin, not checked into this repository.
+Notifications use Omarchy's stock `omarchy.notifications` service: grouped
+toasts, Do Not Disturb and history. `Super+N` opens notification history and
+`Super+Alt+N` toggles Focus; Omarchy's own `Super+comma` family also applies.
+Notification state lives in `~/.local/state/omarchy/notifications/` and is not
+checked into this repository.
 
 ## Not tracked (recreate after a fresh install)
 

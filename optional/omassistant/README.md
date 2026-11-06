@@ -7,7 +7,7 @@ handles the request and Piper speaks its answer.
 
 ## Features
 
-- Local speech-to-text through Hex.
+- Local speech-to-text through Superwhisper, Omarchy's dictation backend.
 - Uses the agent selected by `omarchy-default-agent`; it is not tied to one AI
   provider or CLI.
 - Supports OpenCode, Claude Code, Codex, Gemini, Copilot, Crush, Grok, Oh My
@@ -33,9 +33,9 @@ before enabling third-party installations.
 ## Requirements
 
 - A current Omarchy installation with `omarchy-shell` plugin support.
-- Hex installed and running as a user service (`hex.service`).
+- Superwhisper installed and selected with `omarchy default dictation superwhisper`.
 - An Omarchy default agent selected with `omarchy default agent <name>`.
-- `uv`, `ffmpeg`, `jq`, and PipeWire's `pw-play`.
+- `uv`, `ffmpeg`, `jq`, PipeWire's `pw-play`, and the `superwhisper` CLI.
 
 ## Install
 
