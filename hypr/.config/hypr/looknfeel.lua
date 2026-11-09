@@ -53,3 +53,6 @@
 -- Find its class with: hyprctl clients
 -- o.transparent_window("my-app")
 -- o.transparent_window("my-app", "0.9 0.85") -- Custom active/inactive opacity.
+
+-- Omaread: follow Omarchy's window opacity (Appearance > Windows > Window Opacity).
+o.transparent_window("io\\.github\\.sarrietav_dev\\.Omaread")
