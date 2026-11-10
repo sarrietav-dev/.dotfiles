@@ -56,3 +56,11 @@
 
 -- Omaread: follow Omarchy's window opacity (Appearance > Windows > Window Opacity).
 o.transparent_window("io\\.github\\.sarrietav_dev\\.Omaread")
+
+-- Herdr app: glassy only while Omarchy's Glassy mode is on (Appearance > Windows >
+-- Window Opacity). It paints an opaque window and ignores alpha in its layout, so
+-- the glass is the compositor's: whole-window opacity plus Glassy's blur.
+local paths = require("default.hypr.paths")
+if io.open(paths.state_home .. "/omarchy/toggles/hypr/window-glassy.lua") then
+  o.transparent_window("herdr-app", "0.9 0.85")
+end

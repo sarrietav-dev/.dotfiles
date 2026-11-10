@@ -68,6 +68,16 @@
         "/home/sebas/.local/bin/mailgun-mcp"
       ],
       "enabled": true
+    },
+    "browse": {
+      "type": "local",
+      "command": [
+        "/home/sebas/.local/bin/browse",
+        "mcp"
+      ],
+      "environment": {
+        "OPENCODE_BROWSER_RUNTIME": "auto-update"
+      }
     }
   }
 }

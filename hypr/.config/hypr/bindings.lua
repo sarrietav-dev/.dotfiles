@@ -49,7 +49,8 @@ o.bind("SUPER + CTRL + SHIFT + M", "Music (Spotify)", { omarchy = "spotify" })
 
 -- Extra application bindings.
 o.bind("SUPER + SHIFT + CTRL + B", "Browser (Work)", "uwsm-app -- google-chrome-stable --new-window")
-o.bind("SUPER + SHIFT + T", "Activity", { tui = "btop" })
+-- SUPER + SHIFT + T (Activity) is already bound by Omarchy's defaults; binding
+-- it again made every press launch two btop windows.
 o.bind("SUPER + SHIFT + G", "WhatsApp", { webapp = "https://web.whatsapp.com/", focus = true })
 o.bind("SUPER + SHIFT + CTRL + SLASH", "Passwords (quick access)", "uwsm-app -- 1password --quick-access")
 o.bind("SUPER + SHIFT + ALT + A", "Gemini", { webapp = "https://gemini.google.com" })

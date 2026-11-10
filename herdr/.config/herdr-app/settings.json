@@ -3,11 +3,14 @@
   "sounds": {
     "enabled": true
   },
-  "minimum_contrast": 1,
+  "font": "CaskaydiaCove Nerd Font",
+  "font_size": 16,
+  "font_ligatures": true,
+  "ui_font": "Geist",
   "pane_scrollbars": false,
+  "minimum_contrast": 1,
   "theme": {
     "light": "omarchy",
     "dark": "omarchy"
-  },
-  "font": "CaskaydiaCove Nerd Font"
+  }
 }

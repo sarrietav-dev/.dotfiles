@@ -68,7 +68,22 @@
     "ctrl-shift-r": "tab.rename",
     "ctrl-shift-l": "layout.switch",
     "f2": "tab.rename",
-    "shift-f2": "space.rename"
+    "shift-f2": "space.rename",
+    "ctrl-alt-c": "tab.new",
+    "ctrl-alt-d": "window.close",
+    "ctrl-alt-h": "pane.split:down",
+    "ctrl-alt-v": "pane.split:right",
+    "ctrl-alt-x": "pane.close",
+    "ctrl-alt-z": "pane.zoom",
+    "ctrl-alt-r": "tab.rename",
+    "ctrl-alt-k": {"command": "tab.close", "args": {"confirmed": true}},
+    "ctrl-alt-p": "tab.prev",
+    "ctrl-alt-n": "tab.next",
+    "ctrl-alt-shift-c": "space.new",
+    "ctrl-alt-shift-r": "space.rename",
+    "ctrl-alt-shift-k": {"command": "space.close", "args": {"confirmed": true}},
+    "ctrl-alt-shift-p": "space.prev",
+    "ctrl-alt-shift-n": "space.next"
   },
   "terminal": {
     "ctrl-backspace": "send:\u0017",

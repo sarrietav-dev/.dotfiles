@@ -65,3 +65,9 @@ o.window("^(1[pP]assword|com.onepassword.OnePassword|com.1password.1Password)$",
 -- suppress_event activatefocus = ignore activation requests for this window only.
 -- no_initial_focus = don't grab focus when the browser window first opens.
 o.window({ class = "^playwright-cli$" }, { suppress_event = "activatefocus", no_initial_focus = true })
+
+-- Herdr app is a terminal host, so give it Omarchy's `terminal` tag.
+-- Omarchy's universal clipboard sends Ctrl+C/Ctrl+V to untagged windows, but
+-- Herdr copies and pastes with Ctrl+Shift+C / Ctrl+Shift+V. With the tag,
+-- SUPER+C and SUPER+V reach those bindings instead of the terminal program.
+o.window({ class = "^herdr-app$" }, { tag = "+terminal" })

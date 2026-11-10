@@ -85,3 +85,4 @@ export PATH="$PATH:/home/sebas/.lmstudio/bin"
 # Added by flyctl installer
 export FLYCTL_INSTALL="/home/sebas/.fly"
 export PATH="$FLYCTL_INSTALL/bin:$PATH"
+export PATH=$PATH:$HOME/.maestro/bin
