@@ -1,0 +1,201 @@
+#!/bin/bash
+# omarchy theme-set hook: regenerate Herdr's theme from the active Omarchy
+# theme, then tell a running Herdr window to re-apply it.
+# omarchy-hook runs hooks with `bash "$hook"`, so this is a bash wrapper that
+# hands off to python3 (heredoc form keeps it one file).
+#
+# Generated file: ~/.config/herdr-app/themes/omarchy.json
+# Herdr must have theme "omarchy" (settings.json, or picked in its theme menu).
+python3 - "$@" <<'PY'
+import json
+import os
+import shutil
+import subprocess
+import sys
+import tempfile
+import tomllib
+from pathlib import Path
+
+HOME = Path.home()
+STATE = HOME / ".local/state/omarchy/current"
+THEME_DIR = STATE / "theme"
+COLORS_TOML = THEME_DIR / "colors.toml"
+ALACRITTY_TOML = THEME_DIR / "alacritty.toml"
+OUT = HOME / ".config/herdr-app/themes/omarchy.json"
+THEME_NAME = "omarchy"
+
+ORDER = ("black", "red", "green", "yellow", "blue", "magenta", "cyan", "white")
+
+
+def read_toml(path):
+    try:
+        with open(path, "rb") as f:
+            return tomllib.load(f)
+    except (OSError, tomllib.TOMLDecodeError):
+        return None
+
+
+def base_palette(colors):
+    """Fallbacks when the generated alacritty.toml is missing (older setups)."""
+    bg = colors.get("background", "#000000")
+    fg = colors.get("foreground", "#ffffff")
+    bright_fg = colors.get("bright_foreground", fg)
+    normal = {
+        "black": bg,
+        "red": colors.get("red", fg),
+        "green": colors.get("green", fg),
+        "yellow": colors.get("yellow", fg),
+        "blue": colors.get("blue", fg),
+        "magenta": colors.get("magenta", fg),
+        "cyan": colors.get("cyan", fg),
+        "white": fg,
+    }
+    bright = {
+        "black": colors.get("muted", colors.get("dark_foreground", fg)),
+        "red": colors.get("bright_red", normal["red"]),
+        "green": colors.get("bright_green", normal["green"]),
+        "yellow": colors.get("bright_yellow", normal["yellow"]),
+        "blue": colors.get("bright_blue", normal["blue"]),
+        "magenta": colors.get("bright_magenta", normal["magenta"]),
+        "cyan": colors.get("bright_cyan", normal["cyan"]),
+        "white": bright_fg,
+    }
+    return {
+        "background": bg,
+        "foreground": fg,
+        "selection": colors.get("selection", bg),
+        "cursor": bright_fg,
+        "normal": normal,
+        "bright": bright,
+    }
+
+
+def palette_from_alacritty(doc, colors):
+    """Parse the theme's generated alacritty.toml: Omarchy's own colour mapping."""
+    try:
+        c = doc["colors"]
+        primary = c["primary"]
+        normal_in, bright_in = c["normal"], c["bright"]
+        pal = {
+            "background": primary["background"],
+            "foreground": primary["foreground"],
+            "selection": c.get("selection", {}).get("background", primary["background"]),
+            "cursor": c.get("cursor", {}).get("cursor", primary["foreground"]),
+            "normal": {k: normal_in[k] for k in ORDER},
+            "bright": {k: bright_in[k] for k in ORDER},
+        }
+        return pal
+    except (KeyError, TypeError):
+        return base_palette(colors)
+
+
+def theme_doc(pal, colors):
+    normal, bright = pal["normal"], pal["bright"]
+    bg = pal["background"]
+    fg = pal["foreground"]
+    canvas = colors.get("darker_background") or colors.get("dark_background") or bg
+    chrome = colors.get("dark_background") or bg
+    surface = colors.get("lighter_background") or colors.get("muted") or bg
+    border = colors.get("muted") or colors.get("light_foreground") or fg
+    muted = colors.get("light_foreground") or colors.get("muted") or fg
+    dim = colors.get("dark_foreground") or muted
+    accent = colors.get("accent") or normal["blue"]
+    selection = colors.get("selection") or pal["selection"]
+
+    return {
+        "background": bg,
+        "foreground": fg,
+        "selection": selection,
+        "cursor": pal["cursor"],
+        "ansi": [normal[k] for k in ORDER] + [bright[k] for k in ORDER],
+        "colors": {
+            "canvas": canvas,
+            "chrome": chrome,
+            "surface": surface,
+            "popover": surface,
+            "border": border,
+            "input": selection,
+            "muted": muted,
+            "dim": dim,
+            "accent": accent,
+            "accent_foreground": bg,
+            "ring": accent,
+            "selected": selection,
+            "solid": accent,
+            "solid_foreground": bg,
+            "working": normal["blue"],
+            "blocked": normal["red"],
+            "done": normal["green"],
+            "idle": muted,
+            "unknown": dim,
+        },
+    }
+
+
+def write_atomic(path, text):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd, tmp = tempfile.mkstemp(dir=path.parent, prefix=".omarchy.", suffix=".json")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
+            f.write(text)
+        os.chmod(tmp, 0o644)
+        os.replace(tmp, path)
+    except BaseException:
+        try:
+            os.unlink(tmp)
+        except OSError:
+            pass
+        raise
+
+
+def herdr_binary():
+    """Desktop-session PATH usually has it; fall back to the usual install spot."""
+    found = shutil.which("herdr-app")
+    if found:
+        return found
+    candidate = HOME / ".local/bin/herdr-app"
+    return str(candidate) if candidate.is_file() else None
+
+
+def notify_herdr():
+    """Re-apply the theme in a running window; stay quiet when none is running."""
+    binary = herdr_binary()
+    if binary is None:
+        return
+    try:
+        subprocess.run(
+            [binary, "do", "app.theme", "--name", THEME_NAME],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            timeout=10,
+        )
+    except (OSError, subprocess.SubprocessError):
+        pass
+
+
+def main():
+    colors_doc = read_toml(COLORS_TOML)
+    alacritty_doc = read_toml(ALACRITTY_TOML)
+    if colors_doc is None and alacritty_doc is None:
+        # No staged theme: leave the last good Herdr theme alone.
+        return 0
+
+    colors = colors_doc or {}
+    pal = base_palette(colors)
+    if alacritty_doc is not None:
+        pal = palette_from_alacritty(alacritty_doc, colors)
+
+    doc = theme_doc(pal, colors)
+    text = json.dumps(doc, indent=2) + "\n"
+    try:
+        current = OUT.read_text(encoding="utf-8")
+    except OSError:
+        current = None
+    if current != text:
+        write_atomic(OUT, text)
+    notify_herdr()
+    return 0
+
+
+sys.exit(main())
+PY

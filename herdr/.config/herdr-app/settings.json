@@ -4,10 +4,10 @@
     "enabled": true
   },
   "minimum_contrast": 1,
-  "theme": "terminal",
-  "appearance": "dark",
-  "colors": {
-    "accent": "#7daea3"
+  "pane_scrollbars": false,
+  "theme": {
+    "light": "omarchy",
+    "dark": "omarchy"
   },
   "font": "CaskaydiaCove Nerd Font"
 }
