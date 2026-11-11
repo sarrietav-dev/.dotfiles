@@ -8,7 +8,9 @@ set -euo pipefail
 
 # --- Packages ---------------------------------------------------------------
 omarchy pkg add speech-dispatcher
-omarchy pkg aur add piper-tts-bin
+# Piper comes from the upstream release (see install/install_local_bins.sh) and
+# is exposed as `piper-tts` by ~/.local/bin/piper-tts.
+"$HOME/.local/bin/update-local-bins" --only piper-tts
 
 # --- Voice models -----------------------------------------------------------
 VOICE_ROOT=/usr/share/piper-voices/en/en_US

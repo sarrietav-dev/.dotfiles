@@ -1,0 +1,212 @@
+#!/usr/bin/env bash
+# update-local-bins — keep the upstream release binaries that stand in for AUR
+# -bin packages up to date.
+#
+# Each tool below used to be rebuilt from the AUR. They now install straight
+# from the upstream release into ~/.local/bin (piper keeps its libs in
+# ~/.local/lib). The release each one was installed from is recorded in
+# $XDG_STATE_HOME/local-bins, so a plain re-run only downloads what actually
+# changed upstream.
+#
+# Usage: update-local-bins [--check] [--force] [--only NAME]
+#   --check   report available updates without installing anything
+#   --force   reinstall even when the recorded release is current
+#   --only    restrict to a single tool (spotifast, omaread, sift, opentunnel,
+#             android-cli, piper-tts)
+set -euo pipefail
+
+BIN="${XDG_BIN_HOME:-$HOME/.local/bin}"
+DATA="${XDG_DATA_HOME:-$HOME/.local/share}"
+STATE="${XDG_STATE_HOME:-$HOME/.local/state}/local-bins"
+APPS="$DATA/applications"
+ICONS="$DATA/icons/hicolor/scalable/apps"
+PIPER_LIB="$HOME/.local/lib/piper-tts"
+
+CHECK_ONLY=false
+FORCE=false
+ONLY=""
+
+while (($#)); do
+  case "$1" in
+    --check) CHECK_ONLY=true ;;
+    --force) FORCE=true ;;
+    --only)
+      ONLY="${2:?--only needs a tool name}"
+      shift
+      ;;
+    -h | --help)
+      sed -n '2,20p' "$0" | sed -e 's/^# \{0,1\}//' -e '/^$/q'
+      exit 0
+      ;;
+    *)
+      echo "unknown option: $1" >&2
+      exit 2
+      ;;
+  esac
+  shift
+done
+
+die() { printf '\033[31m%s\033[0m\n' "$*" >&2; exit 1; }
+say() { printf '\033[1;32m==>\033[0m %s\n' "$*"; }
+note() { printf '    %s\n' "$*"; }
+
+for dep in curl gh tar zstd; do
+  command -v "$dep" >/dev/null || die "missing dependency: $dep"
+done
+
+mkdir -p "$BIN" "$APPS" "$ICONS" "$STATE"
+
+TMP=""
+cleanup() { if [[ -n "${TMP:-}" ]]; then rm -rf "$TMP"; fi; }
+trap cleanup EXIT
+
+workdir() {
+  [[ -n "$TMP" ]] || TMP=$(mktemp -d)
+  local dir="$TMP/$1"
+  mkdir -p "$dir/pkg" "$dir/tree"
+  printf '%s\n' "$dir"
+}
+
+recorded() { cat "$STATE/$1" 2>/dev/null || true; }
+record() { printf '%s\n' "$2" >"$STATE/$1"; }
+
+wanted() { [[ -z "$ONLY" || "$ONLY" == "$1" ]]; }
+
+latest_tag() { gh release view --repo "$1" --json tagName --jq .tagName; }
+
+extract() { # archive destdir
+  case "$1" in
+    *.tar.zst) tar --zstd -xf "$1" -C "$2" ;;
+    *.tar.gz | *.tgz) tar -xzf "$1" -C "$2" ;;
+    *.tar.xz) tar -xJf "$1" -C "$2" ;;
+    *.zip) unzip -q "$1" -d "$2" ;;
+    *) cp "$1" "$2/" ;;
+  esac
+}
+
+# Point the bundled .desktop files at the absolute binary path (the session
+# launcher does not always have ~/.local/bin on PATH) and install icons.
+install_support_files() { # tree tool
+  local tree=$1 tool=$2 file
+  while IFS= read -r file; do
+    sed -E "s|^Exec=[^ ]*|Exec=$BIN/$tool|" "$file" >"$APPS/$(basename "$file")"
+  done < <(find "$tree" -maxdepth 6 -name '*.desktop' -type f)
+  while IFS= read -r file; do
+    install -Dm644 "$file" "$ICONS/$(basename "$file")"
+  done < <(find "$tree" -maxdepth 6 -name '*.svg' -type f)
+}
+
+# install_github_binary <name> <repo> <asset-glob>
+install_github_binary() {
+  local name=$1 repo=$2 pattern=$3
+  local tag current dir archive bin
+  tag=$(latest_tag "$repo") || die "$repo: cannot read releases"
+  current=$(recorded "$name")
+
+  if [[ "$current" == "$tag" && $FORCE == false ]]; then
+    note "$name $tag (current)"
+    return 0
+  fi
+  if $CHECK_ONLY; then
+    say "$name: ${current:-not installed} -> $tag"
+    return 0
+  fi
+
+  say "$name: ${current:-not installed} -> $tag"
+  dir=$(workdir "$name")
+  gh release download --repo "$repo" --pattern "$pattern" --dir "$dir/pkg" --clobber
+  archive=$(find "$dir/pkg" -maxdepth 1 -type f | head -1)
+  [[ -n "$archive" ]] || die "$repo $tag: no asset matching '$pattern'"
+  extract "$archive" "$dir/tree"
+
+  bin=$(find "$dir/tree" -maxdepth 2 -type f -name "$name" -perm -u+x | head -1)
+  [[ -n "$bin" ]] || bin=$(find "$dir/tree" -maxdepth 2 -type f -perm -u+x | head -1)
+  [[ -n "$bin" ]] || die "$repo $tag: no executable found in $pattern"
+
+  install -Dm755 "$bin" "$BIN/$name"
+  install_support_files "$dir/tree" "$name"
+  record "$name" "$tag"
+  note "installed $BIN/$name"
+}
+
+# Google publishes the CLI at a rolling "latest" URL, so the checksum doubles
+# as the release marker.
+install_android_cli() {
+  local url="https://dl.google.com/android/cli/latest/linux_x86_64/android-cli"
+  local sum current dir
+  sum=$(curl -fsSL "$url.sha256" | awk '{print $1}')
+  [[ -n "$sum" ]] || die "android-cli: cannot read $url.sha256"
+  current=$(recorded android-cli)
+
+  if [[ "$current" == "$sum" && $FORCE == false ]]; then
+    note "android-cli (current)"
+    return 0
+  fi
+  if $CHECK_ONLY; then
+    if [[ "$current" == "$sum" ]]; then
+      note "android-cli (current)"
+    else
+      say "android-cli: update available"
+    fi
+    return 0
+  fi
+
+  say "android-cli: installing ${sum:0:12}"
+  dir=$(workdir android-cli)
+  curl -fsSL -o "$dir/pkg/android-cli" "$url"
+  install -Dm755 "$dir/pkg/android-cli" "$BIN/android-cli"
+  record android-cli "$sum"
+  note "installed $BIN/android-cli"
+}
+
+# upstream piper ships a self-contained dir (binary + espeak-ng data + libs);
+# the wrapper keeps the dotfiles' `piper-tts` command name working.
+install_piper() {
+  local tag current dir root
+  tag=$(latest_tag rhasspy/piper) || die "piper: cannot read releases"
+  current=$(recorded piper-tts)
+
+  if [[ "$current" == "$tag" && $FORCE == false ]]; then
+    note "piper-tts $tag (current)"
+    return 0
+  fi
+  if $CHECK_ONLY; then
+    say "piper-tts: ${current:-not installed} -> $tag"
+    return 0
+  fi
+
+  say "piper-tts: ${current:-not installed} -> $tag"
+  dir=$(workdir piper-tts)
+  gh release download --repo rhasspy/piper --pattern 'piper_linux_x86_64.tar.gz' --dir "$dir/pkg" --clobber
+  extract "$(find "$dir/pkg" -maxdepth 1 -type f | head -1)" "$dir/tree"
+
+  root=$(find "$dir/tree" -maxdepth 2 -type f -name piper -printf '%h\n' | head -1)
+  [[ -n "$root" ]] || die "piper $tag: piper binary not found in archive"
+  rm -rf "$PIPER_LIB"
+  install -d "$PIPER_LIB"
+  cp -a "$root/." "$PIPER_LIB/"
+
+  cat >"$BIN/piper-tts" <<'EOF'
+#!/bin/sh
+# piper-tts — upstream piper, installed by update-local-bins
+piper_root="${HOME}/.local/lib/piper-tts"
+export LD_LIBRARY_PATH="${piper_root}${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+exec "${piper_root}/piper" "$@"
+EOF
+  chmod 755 "$BIN/piper-tts"
+  record piper-tts "$tag"
+  note "installed $BIN/piper-tts (libs in $PIPER_LIB)"
+}
+
+wanted spotifast && install_github_binary spotifast crmne/spotifast 'spotifast-v*-x86_64-unknown-linux-gnu.tar.gz'
+wanted omaread && install_github_binary omaread sarrietav-dev/omaread 'omaread-*-x86_64.tar.gz'
+wanted sift && install_github_binary sift sarrietav-dev/sift 'sift-*-x86_64.tar.zst'
+wanted opentunnel && install_github_binary opentunnel anomalyco/opentunnel 'opentunnel-linux-x64.tar.gz'
+wanted android-cli && install_android_cli
+wanted piper-tts && install_piper
+
+if ! $CHECK_ONLY; then
+  command -v update-desktop-database >/dev/null && update-desktop-database "$APPS" 2>/dev/null || true
+  command -v gtk-update-icon-cache >/dev/null &&
+    gtk-update-icon-cache -q -t -f "$DATA/icons/hicolor" 2>/dev/null || true
+fi

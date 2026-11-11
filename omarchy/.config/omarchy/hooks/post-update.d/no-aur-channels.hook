@@ -1,0 +1,31 @@
+#!/bin/bash
+# Keep the non-pacman channels that stand in for AUR packages current.
+#
+# `omarchy update` already handles core/extra/omarchy (pacman), mise and the
+# few AUR packages left, then runs this hook. Everything installed outside
+# pacman is refreshed here so one update really means one update:
+#   - Flathub apps            (Android Studio, ProtonPlus, Stremio, ...)
+#   - Google Cloud SDK        (self-updater; gsutil ships inside it)
+#   - ~/.local/bin releases   (spotifast, omaread, sift, opentunnel,
+#                              android-cli, piper-tts)
+#
+# Each step is independent: a failure is reported and the rest still run, so a
+# flaky download never blocks the system update from finishing.
+
+set -uo pipefail
+
+step() {
+  local label=$1
+  shift
+  printf '\033[1;34m==>\033[0m %s\n' "$label"
+  if ! "$@"; then
+    printf '\033[33m    %s failed, continuing\033[0m\n' "$label"
+  fi
+}
+
+step "flatpak update" flatpak update -y --noninteractive
+
+GCLOUD="$HOME/.local/share/google-cloud-sdk/bin/gcloud"
+[[ -x $GCLOUD ]] && step "gcloud components update" "$GCLOUD" components update --quiet
+
+step "release binaries" "$HOME/.local/bin/update-local-bins"
