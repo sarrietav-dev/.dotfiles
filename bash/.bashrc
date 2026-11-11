@@ -29,6 +29,7 @@ alias cx='printf "\033[2J\033[3J\033[H" && claude --permission-mode bypassPermis
 # PS1="\W \[\e]0;\w\a\]$PS1"
 
 alias prune="git fetch --prune && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs -r git branch -d"
+alias hunkpr='GH_TOKEN=$(gh auth token) hunk gh pr'
 
 export PATH="$HOME/.config/composer/vendor/bin:$PATH"
 . "$HOME/.cargo/env"
