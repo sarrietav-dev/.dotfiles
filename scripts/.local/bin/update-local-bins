@@ -56,12 +56,11 @@ done
 
 mkdir -p "$BIN" "$APPS" "$ICONS" "$STATE"
 
-TMP=""
-cleanup() { if [[ -n "${TMP:-}" ]]; then rm -rf "$TMP"; fi; }
+TMP=$(mktemp -d)
+cleanup() { rm -rf "$TMP"; }
 trap cleanup EXIT
 
 workdir() {
-  [[ -n "$TMP" ]] || TMP=$(mktemp -d)
   local dir="$TMP/$1"
   mkdir -p "$dir/pkg" "$dir/tree"
   printf '%s\n' "$dir"
@@ -71,6 +70,18 @@ recorded() { cat "$STATE/$1" 2>/dev/null || true; }
 record() { printf '%s\n' "$2" >"$STATE/$1"; }
 
 wanted() { [[ -z "$ONLY" || "$ONLY" == "$1" ]]; }
+
+# Run one tool's installer in a subshell so a bad download, a moved asset or a
+# rate-limited API call cannot stop the tools after it from updating.
+failures=()
+attempt() { # label command...
+  local label=$1
+  shift
+  if ! ("$@"); then
+    failures+=("$label")
+    printf '\033[33m    %s failed, continuing\033[0m\n' "$label"
+  fi
+}
 
 latest_tag() { gh release view --repo "$1" --json tagName --jq .tagName; }
 
@@ -206,15 +217,19 @@ EOF
   note "installed $BIN/piper-tts (libs in $PIPER_LIB)"
 }
 
-wanted spotifast && install_github_binary spotifast crmne/spotifast 'spotifast-v*-x86_64-unknown-linux-gnu.tar.gz'
-wanted omaread && install_github_binary omaread sarrietav-dev/omaread 'omaread-*-x86_64.tar.gz'
-wanted sift && install_github_binary sift sarrietav-dev/sift 'sift-*-x86_64.tar.zst'
-wanted opentunnel && install_github_binary opentunnel anomalyco/opentunnel 'opentunnel-linux-x64.tar.gz'
-wanted android-cli && install_android_cli
-wanted piper-tts && install_piper
+wanted spotifast && attempt spotifast install_github_binary spotifast crmne/spotifast 'spotifast-v*-x86_64-unknown-linux-gnu.tar.gz'
+wanted omaread && attempt omaread install_github_binary omaread sarrietav-dev/omaread 'omaread-*-x86_64.tar.gz'
+wanted sift && attempt sift install_github_binary sift sarrietav-dev/sift 'sift-*-x86_64.tar.zst'
+wanted opentunnel && attempt opentunnel install_github_binary opentunnel anomalyco/opentunnel 'opentunnel-linux-x64.tar.gz'
+wanted android-cli && attempt android-cli install_android_cli
+wanted piper-tts && attempt piper-tts install_piper
 
 if ! $CHECK_ONLY; then
   command -v update-desktop-database >/dev/null && update-desktop-database "$APPS" 2>/dev/null || true
   command -v gtk-update-icon-cache >/dev/null &&
     gtk-update-icon-cache -q -t -f "$DATA/icons/hicolor" 2>/dev/null || true
+fi
+
+if ((${#failures[@]})); then
+  die "failed: ${failures[*]}"
 fi
