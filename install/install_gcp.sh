@@ -20,3 +20,11 @@ fi
 
 # The SDK's own updater; the PATH entry lives in bash/.bashrc.
 "$SDK_DIR/bin/gcloud" components update --quiet
+
+# The AUR packages install the same files under /usr; drop them now that the
+# self-updating SDK is in place.
+for pkg in google-cloud-cli google-cloud-cli-gsutil; do
+  if pacman -Q "$pkg" &>/dev/null; then
+    sudo pacman -Rns --noconfirm "$pkg"
+  fi
+done

@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Refuse to commit anything that looks like a credential.
+command -v gitleaks >/dev/null 2>&1 || exit 0
+exec gitleaks git --pre-commit --redact --staged --verbose

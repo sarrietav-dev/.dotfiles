@@ -112,7 +112,11 @@ install_github_binary() {
     return 0
   fi
 
-  say "$name: ${current:-not installed} -> $tag"
+  if [[ "$current" == "$tag" ]]; then
+    say "$name: reinstalling $tag"
+  else
+    say "$name: ${current:-not installed} -> $tag"
+  fi
   dir=$(workdir "$name")
   gh release download --repo "$repo" --pattern "$pattern" --dir "$dir/pkg" --clobber
   archive=$(find "$dir/pkg" -maxdepth 1 -type f | head -1)
@@ -175,7 +179,11 @@ install_piper() {
     return 0
   fi
 
-  say "piper-tts: ${current:-not installed} -> $tag"
+  if [[ "$current" == "$tag" ]]; then
+    say "piper-tts: reinstalling $tag"
+  else
+    say "piper-tts: ${current:-not installed} -> $tag"
+  fi
   dir=$(workdir piper-tts)
   gh release download --repo rhasspy/piper --pattern 'piper_linux_x86_64.tar.gz' --dir "$dir/pkg" --clobber
   extract "$(find "$dir/pkg" -maxdepth 1 -type f | head -1)" "$dir/tree"
