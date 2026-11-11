@@ -1,0 +1,58 @@
+#!/bin/bash
+# omarchy-panic — remote lock / logout / wipe for a stolen Omarchy laptop.
+#
+# Runs over SSH as root through a forced command, so the only thing the key
+# can do is what this script allows. Reachable via Tailscale (or LAN) even
+# when nobody is logged in, because sshd and tailscaled are system services.
+#
+#   ssh root@<laptop> lock     lock every graphical session
+#   ssh root@<laptop> logout   kill every session, return to the login screen
+#   ssh root@<laptop> wipe     destroy the LUKS keyslots, then power off
+#   ssh root@<laptop> status   say whether the machine is up
+#
+# Wipe is instant and irreversible: without the keyslots the disk is noise.
+
+set -u
+
+CRYPT_DEV="${OMARCHY_PANIC_DEV:-/dev/nvme0n1p2}"
+ACTION="${SSH_ORIGINAL_COMMAND:-status}"
+
+log() {
+  logger -t omarchy-panic -- "$*"
+  printf 'omarchy-panic: %s\n' "$*"
+}
+
+sessions() {
+  loginctl list-sessions --no-legend 2>/dev/null | awk '{print $1}'
+}
+
+case "$ACTION" in
+  lock)
+    log "locking sessions on $(hostname)"
+    loginctl lock-sessions >/dev/null 2>&1
+    ;;
+  logout)
+    log "terminating sessions on $(hostname)"
+    for s in $(sessions); do
+      loginctl terminate-session "$s" 2>/dev/null
+    done
+    ;;
+  wipe)
+    if [ ! -b "$CRYPT_DEV" ]; then
+      log "REFUSING: $CRYPT_DEV is not a block device"
+      exit 1
+    fi
+    log "ERASING LUKS KEYS ON $CRYPT_DEV"
+    cryptsetup luksErase --batch-mode "$CRYPT_DEV" >/dev/null 2>&1 || log "luksErase failed"
+    sync
+    log "powering off"
+    systemctl poweroff -f
+    ;;
+  status)
+    log "online: $(hostname) $(date -Is)"
+    ;;
+  *)
+    printf 'usage: ssh root@<host> lock|logout|wipe|status\n' >&2
+    exit 64
+    ;;
+esac
