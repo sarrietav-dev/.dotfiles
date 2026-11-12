@@ -22,8 +22,8 @@ const BINDINGS = [
   ["n", "Next tab", "tab.next"],
   ["p", "Previous tab", "tab.prev"],
   // Panes
-  ["h", "Split right", "pane.split", { direction: "right" }],
-  ["v", "Split down", "pane.split", { direction: "down" }],
+  ["h", "Split down", "pane.split", { direction: "down" }],
+  ["v", "Split right", "pane.split", { direction: "right" }],
   ["x", "Close pane", "pane.close"],
   ["z", "Zoom pane", "pane.zoom"],
   // Spaces
