@@ -4,9 +4,9 @@ sudo pacman -S --needed \
   nss nspr at-spi2-core libcups libdrm dbus libxcb libxkbcommon \
   libx11 libxcomposite libxdamage libxext libxfixes libxrandr \
   mesa pango cairo alsa-lib gtk3 libnotify libsecret libglvnd \
-  xorg-server-xvfb webkit2gtk libwebp libvpx flite icu libxml2
+  xorg-server-xvfb webkit2gtk-4.1 libwebp libvpx flite icu libxml2
 
-sudo pacman -S --needed webkit2gtk libsecret
+sudo pacman -S --needed webkit2gtk-4.1 libsecret
 
 sudo pacman -S --needed --noconfirm chromium firefox
 

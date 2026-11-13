@@ -18,8 +18,8 @@ echo "  Extracting fonts..."
 unzip -q "$TMP_DIR/ioskeley.zip" -d "$TMP_DIR"
 
 echo "  Installing fonts..."
-cp "$TMP_DIR/IoskeleyMono-NerdFont/Normal"/*.ttf "$FONT_DIR/"
-cp "$TMP_DIR/IoskeleyMono-NerdFont/SemiCondensed"/*.ttf "$FONT_DIR/"
+cp "$TMP_DIR/Normal"/*.ttf "$FONT_DIR/"
+cp "$TMP_DIR/SemiCondensed"/*.ttf "$FONT_DIR/"
 
 echo "  Refreshing font cache..."
 fc-cache -fv "$FONT_DIR" > /dev/null 2>&1

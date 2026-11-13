@@ -30,7 +30,29 @@
           "lifeExpectancy": 90
         },
         {
-          "id": "omarchy.elsewhen"
+          "id": "omarchy.elsewhen",
+          "cities": [
+            {
+              "name": "Bogota",
+              "zone": "America/Bogota"
+            },
+            {
+              "name": "London",
+              "zone": "Europe/London"
+            },
+            {
+              "name": "Dubai",
+              "zone": "Asia/Dubai"
+            },
+            {
+              "name": "Tokyo",
+              "zone": "Asia/Tokyo"
+            },
+            {
+              "name": "Los Angeles",
+              "zone": "America/Los_Angeles"
+            }
+          ]
         },
         {
           "id": "omarchy.keyboard-layout"
@@ -85,7 +107,9 @@
         {
           "id": "superwhisper.panel"
         }
-      ]
+      ],
+      "centerBegin": [],
+      "centerEnd": []
     }
   },
   "plugins": [
