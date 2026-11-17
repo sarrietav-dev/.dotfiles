@@ -90,3 +90,33 @@ export PATH="$PATH:/home/sebas/.lmstudio/bin"
 export FLYCTL_INSTALL="/home/sebas/.fly"
 export PATH="$FLYCTL_INSTALL/bin:$PATH"
 export PATH=$PATH:$HOME/.maestro/bin
+
+# Glow wraps to whatever the terminal reports, so it adapts when a tiling
+# layout or a multiplexer (herdr, tmux) gives the window a smaller size.
+# Glamour subtracts the document margin (2) from this width on its own.
+glow() {
+  local arg width
+  for arg in "$@"; do
+    case $arg in
+      -t | --tui | -w | --width | -w* | --width=*) command glow "$@"; return ;;
+    esac
+  done
+  width=$(tput cols 2>/dev/null || echo 80)
+  (( width > 4 )) || width=80
+  command glow -w "$width" "$@"
+}
+
+# >>> agent-resume >>>
+# Agent resume (herdr-agent-resume): a restored Herdr terminal starts its agent again.
+# Set AGENT_RESUME_AUTO=0 to pause it; `install.py --no-auto` removes these lines.
+if [[ $- == *i* && -n "$HC_TERMINAL_ID" ]]; then
+    __agent_resume() {
+        PROMPT_COMMAND="${PROMPT_COMMAND/__agent_resume;/}"
+        unset -f __agent_resume
+        if [[ "$AGENT_RESUME_AUTO" != 0 && -f '/home/sebas/.config/herdr-app/mods/agent-resume/agent_resume.py' ]]; then
+            command python3 '/home/sebas/.config/herdr-app/mods/agent-resume/agent_resume.py' here || command python3 '/home/sebas/.config/herdr-app/mods/agent-resume/agent_resume.py' after $?
+        fi
+    }
+    PROMPT_COMMAND="__agent_resume;${PROMPT_COMMAND}"
+fi
+# <<< agent-resume <<<
