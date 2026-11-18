@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Collects commits across all branches of the ~/Work project repos within a date range.
+# Collects commits across all branches of the ~/Projects project repos within a date range.
 # Usage: collect-commits.sh <since> <until> [author]
 #   <since>, <until>  anything `git log --since/--until` accepts, e.g. 2026-08-11 or "2026-08-11 23:59:59"
 #   [author]          git --author pattern to filter by; "all" (or omitted) uses each repo's own
@@ -47,22 +47,25 @@ UNTIL="$(append_midnight "$UNTIL")"
 SINCE_TS="$(date -d "$SINCE" '+%F %T' 2>/dev/null || echo "$SINCE")"
 UNTIL_TS="$(date -d "$UNTIL" '+%F %T' 2>/dev/null || echo "$UNTIL")"
 
-WORK_DIR="${WORK_DIR:-$HOME/Work}"
+WORK_DIR="${WORK_DIR:-$HOME/Projects}"
 
 # Bot identities whose commits count as the user's own work (git --author patterns).
 BOT_AUTHORS=("Ladybug Agent" "buglady-by-disruptica")
 
 # key -> space-separated list of candidate paths (relative to WORK_DIR) to try
 declare -A REPO_CANDIDATES=(
-  [timetracker]="timetracker"
-  [ladybug]="ladybug"
+  [mantis]="mantis timetracker"
+  [evermach]="evermach ladybug"
   [butterfly]="butterfly butterflyos"
+  [heliflite]="heliflite/heliflite"
   [heliflite-api]="heliflite-api heliflite/heliflite-api"
   [heliflite-plus]="heliflite-plus heliflite/heliflite-plus"
   [heliflite-ui]="heliflite-ui heliflite/heliflite-ui"
 )
 
-for key in timetracker ladybug butterfly heliflite-api heliflite-plus heliflite-ui; do
+# The heliflite monorepo comes first so it wins when the same commit also exists in the old
+# per-app repos (see the cross-repo dedupe after the loop).
+for key in mantis evermach butterfly heliflite heliflite-api heliflite-plus heliflite-ui; do
   repo=""
   for name in ${REPO_CANDIDATES[$key]}; do
     candidate="$WORK_DIR/$name"
@@ -101,4 +104,7 @@ for key in timetracker ladybug butterfly heliflite-api heliflite-plus heliflite-
     awk -F'\t' -v OFS='\t' -v since="$SINCE_TS" -v until="$UNTIL_TS" '
       substr($4, 1, 19) >= since && substr($4, 1, 19) < until && $3 !~ /\(#[0-9]+\)$/ && !seen[$3]++ { print $1, $2, $3 }' |
     tac
-done
+done |
+  # The monorepo was built from the old heliflite-* repos, so the same commit can show up in both.
+  # Keep the first copy (the monorepo's) for any heliflite* repo.
+  awk -F'\t' -v OFS='\t' '$1 !~ /^heliflite/ || !seen[$3]++'

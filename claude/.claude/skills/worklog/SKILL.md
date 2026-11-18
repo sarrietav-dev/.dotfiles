@@ -1,9 +1,9 @@
 ---
 name: worklog
 description: >
-  Summarize what was actually worked on across the ~/Work project repos — timetracker,
-  ladybug, butterflyos, and the three heliflite-* repos (heliflite-api, heliflite-plus,
-  heliflite-ui) — for a timeframe the user names (today, yesterday, this week, last week,
+  Summarize what was actually worked on across the ~/Projects project repos — mantis,
+  evermach, butterflyos, the heliflite monorepo, and the old heliflite-* repos (heliflite-api,
+  heliflite-plus, heliflite-ui) — for a timeframe the user names (today, yesterday, this week, last week,
   since Monday, a date range, a month, etc). Scans every branch (local and remote) in each
   repo, not just the checked-out one, and turns the commits into a plain-language work log
   for non-technical readers (e.g. a client update or a timesheet note) — never raw commit
@@ -15,22 +15,25 @@ allowed-tools: Bash(git:*), Bash(date:*), Bash(~/.claude/skills/worklog/scripts/
 
 # Worklog
 
-Turn git history across the `~/Work` projects into a plain-language work log.
+Turn git history across the `~/Projects` repos into a plain-language work log.
 
 ## Projects
 
 | key | directory | notes |
 |---|---|---|
-| timetracker | `~/Work/timetracker` | |
-| ladybug | `~/Work/ladybug` | |
-| butterfly | `~/Work/butterflyos` | on-disk folder is `butterflyos`, not `butterfly` |
-| heliflite-api | `~/Work/heliflite/heliflite-api` | lives under the `heliflite/` parent folder |
-| heliflite-plus | `~/Work/heliflite/heliflite-plus` | lives under the `heliflite/` parent folder |
-| heliflite-ui | `~/Work/heliflite/heliflite-ui` | lives under the `heliflite/` parent folder |
+| mantis | `~/Projects/mantis` | the time tracker; GitHub repo is still `disruptica/timetracker` |
+| evermach | `~/Projects/evermach` | formerly Ladybug/BugLady; never use the old names in output |
+| butterfly | `~/Projects/butterflyos` | on-disk folder is `butterflyos`, not `butterfly` |
+| heliflite | `~/Projects/heliflite/heliflite` | monorepo (API + web + mobile) created 2026-11-05 from the three repos below; main Heliflite activity from then on |
+| heliflite-api | `~/Projects/heliflite/heliflite-api` | old repo, pre-monorepo |
+| heliflite-plus | `~/Projects/heliflite/heliflite-plus` | old repo, pre-monorepo |
+| heliflite-ui | `~/Projects/heliflite/heliflite-ui` | old repo, pre-monorepo |
 
-The collection script already knows about the `butterflyos` naming quirk and the `heliflite/`
-parent folder. If a repo has moved or been renamed again, it prints a `# WARNING` line to
-stderr instead of failing the other repos.
+The sibling folders `heliflite-api-security` and `heliflite-web-errors` are git worktrees of the
+monorepo, so `git log --all` in `heliflite` already covers them. The script drops commits that
+appear in both the monorepo and an old heliflite-* repo (it keeps the monorepo copy). If a repo
+has moved or been renamed again, the script prints a `# WARNING` line to stderr instead of
+failing the other repos. Override the root with `WORK_DIR=<dir>`.
 
 ## Step 1 — resolve the timeframe to concrete dates
 
@@ -41,11 +44,11 @@ run `date +%F` if unsure) to compute an explicit `SINCE`/`UNTIL`. `UNTIL` should
 end-of-range in `YYYY-MM-DD` form (git treats `--until=<date>` as that date's midnight, i.e.
 up to but not including it), or add ` 23:59:59` to make a specific end day inclusive.
 
-Watch out for a GNU `date` gotcha: a bare weekday name like `date -d 'monday'` means the
-**next** occurrence of that day (strictly in the future), not the current week's. Always use
-`date -d 'last monday'` instead — that correctly means "the most recent Monday, including
-today if today is Monday," which is what "this week" / "since Monday" actually mean. Verify
-with `date -d 'last monday' +%F` before trusting it if you're unsure.
+Watch out for GNU `date` weekday names: `date -d 'monday'` is the **next** Monday, and
+`date -d 'last monday'` is strictly the *previous* Monday, so on a Monday it returns a week ago
+(observed 2026-11-16). Compute this week's Monday arithmetically instead:
+`MON=$(date -d "-$(( $(date +%u) - 1 )) days" +%F)`. Use `$MON` wherever the examples below say
+`date -d 'last monday'`, and `$(date -d "$MON -7 days" +%F)` for last week's Monday.
 
 Examples (assuming today is 2026-08-18, a Tuesday):
 - "today" → SINCE=2026-08-18, UNTIL=2026-08-19
@@ -61,7 +64,7 @@ When ambiguous, ask the user rather than guessing (e.g. "this week" starting Sun
 
 ## Step 2 — collect commits
 
-Run the bundled script once per invocation. It already loops over all six repos and all their
+Run the bundled script once per invocation. It already loops over all the repos and all their
 branches (`git log --all`, deduped). It also drops merge work: true merge commits, and GitHub
 squash/merge commits whose subject ends in `(#123)`. Those re-land work that already shows up
 as the underlying branch commits, often days later, so counting them would log the same work
@@ -86,7 +89,7 @@ commit. If the script warns about a missing repo on stderr, mention that to the 
 of silently dropping that project from the report.
 
 If you suspect remote branches are stale (new work pushed elsewhere, not yet fetched locally),
-you may run `git -C ~/Work/<dir> fetch --all --quiet` first for each repo — this is safe and
+you may run `git -C ~/Projects/<dir> fetch --all --quiet` first for each repo — this is safe and
 read-only from the report's perspective, but do mention you did it since it touches network.
 
 ## Step 3 — synthesize the plain-language log
@@ -125,7 +128,7 @@ user asks for a narrative), with columns in this order:
 ```
 
 - **Day**: `Weekday, Month Day` (e.g. `Friday, August 14`)
-- **Project**: `Timetracker`, `Ladybug`, `ButterflyOS`, `Heliflite API`, `Heliflite Plus`, or `Heliflite UI`
+- **Project**: `Mantis`, `Evermach`, `ButterflyOS`, `Heliflite` (the monorepo), or the old `Heliflite API`, `Heliflite Plus`, `Heliflite UI`
 - **What was done**: the plain-language description, under 255 characters
 
 Example:
@@ -133,15 +136,15 @@ Example:
 ```
 | Day | Project | What was done |
 |---|---|---|
-| Friday, August 14 | Timetracker | Fixed a bug where the support ticket page crashed on certain replies, and cleaned up how the help-desk inbox routes incoming email. |
-| Friday, August 14 | Ladybug | Added a deploy checklist to make releases safer. |
-| Wednesday, August 5 | Timetracker | Connected billing, timesheets, and account data so they can be pulled automatically instead of by hand. |
+| Friday, August 14 | Mantis | Fixed a bug where the support ticket page crashed on certain replies, and cleaned up how the help-desk inbox routes incoming email. |
+| Friday, August 14 | Evermach | Added a deploy checklist to make releases safer. |
+| Wednesday, August 5 | Mantis | Connected billing, timesheets, and account data so they can be pulled automatically instead of by hand. |
 | Tuesday, July 28 | ButterflyOS | Added the ability to log in automatically to check timesheets and billing status. |
 ```
 
-After the table, add one line stating that Ladybug-bot (Buglady / "Ladybug Agent") commits are
+After the table, add one line stating that Evermach-bot (Buglady / "Ladybug Agent") commits are
 included by default, and name which rows (if any) were mostly or partly bot-authored, e.g.
-"Includes Ladybug bot work in the Ladybug rows." Say so even when no bot commits appeared that
+"Includes Evermach bot work in the Evermach rows." Say so even when no bot commits appeared that
 period ("no bot commits in this range"), so the reader never has to guess. If the user passed an
 explicit AUTHOR filter, say bot commits were excluded instead.
 
