@@ -47,6 +47,11 @@ hl.unbind("SUPER + SHIFT + M")
 o.bind("SUPER + SHIFT + M", "Spotifast", { launch = "spotifast", focus = "spotifast" })
 o.bind("SUPER + CTRL + SHIFT + M", "Music (Spotify)", { omarchy = "spotify" })
 
+-- Herdr: open the herdr-app window instead of Omarchy's default, which runs the
+-- herdr TUI inside a terminal window (SUPER + CTRL + RETURN).
+hl.unbind("SUPER + CTRL + RETURN")
+o.bind("SUPER + CTRL + RETURN", "Herdr", { launch = "herdr-app", focus = "^herdr-app$" })
+
 -- Extra application bindings.
 o.bind("SUPER + SHIFT + CTRL + B", "Browser (Work)", "uwsm-app -- google-chrome-stable --new-window")
 -- SUPER + SHIFT + T (Activity) is already bound by Omarchy's defaults; binding
